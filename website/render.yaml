@@ -31,8 +31,8 @@ services:
     buildCommand: ""
     # Publish the same directory (relative to rootDir).
     staticPublishPath: .
-    # Free plan is fine for a marketing site.
-    plan: free
+    # Static sites on Render are free by default — no `plan` field needed.
+    # (The `free` plan name was retired for dynamic services.)
     # Redeploy only when files inside website/ change.
     autoDeploy: true
     buildFilter:
