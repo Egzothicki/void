@@ -23,7 +23,9 @@ export const VoidOnboarding = () => {
 	const isDark = useIsDark()
 
 	return (
-		<div className={`@@void-scope ${isDark ? 'dark' : ''}`}>
+		// `@@sinweave-warm` is preserved literally by scope-tailwind (the `@@` escape).
+		// It's the hook for the onboarding-only warm palette in void.css.
+		<div className={`@@void-scope @@sinweave-warm ${isDark ? 'dark' : ''}`}>
 			<div
 				className={`
 					bg-void-bg-3 fixed top-0 right-0 bottom-0 left-0 width-full z-[99999]
@@ -126,6 +128,127 @@ const featureNameMap: { display: string, featureName: FeatureName }[] = [
 	{ display: 'Source Control', featureName: 'SCM' },
 ];
 
+// ---------------------------------------------------------------------------
+// VerifyKeyButton
+// ---------------------------------------------------------------------------
+// Lets the user test their API key against the provider's auth endpoint so
+// they get immediate feedback instead of hitting a failure the first time
+// they send a chat message. Currently wired only for the two Free-tab
+// providers (Gemini and OpenRouter) per spec; add more in VERIFY_PROVIDERS.
+
+type VerifyableProvider = 'gemini' | 'openRouter';
+type VerifyStatus = 'idle' | 'checking' | 'valid' | 'invalid' | 'error';
+
+const VerifyKeyButton = ({ providerName }: { providerName: VerifyableProvider }) => {
+	const settingsState = useSettingsState();
+	const apiKey = (settingsState.settingsOfProvider[providerName].apiKey ?? '').trim();
+
+	const [status, setStatus] = useState<VerifyStatus>('idle');
+	const [message, setMessage] = useState<string>('');
+
+	// Reset feedback whenever the user edits the key so stale "valid"/"invalid"
+	// indicators don't linger against a different key.
+	useEffect(() => {
+		setStatus('idle');
+		setMessage('');
+	}, [apiKey]);
+
+	const runVerification = async () => {
+		if (!apiKey) {
+			setStatus('error');
+			setMessage('Enter an API key first.');
+			return;
+		}
+
+		setStatus('checking');
+		setMessage('');
+
+		try {
+			if (providerName === 'gemini') {
+				// Google's `models.list` requires a valid key and returns 400/403
+				// with a structured error payload otherwise.
+				const res = await fetch(
+					`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(apiKey)}`
+				);
+				if (res.ok) {
+					setStatus('valid');
+					setMessage('Key is valid.');
+				} else {
+					const body = await res.json().catch(() => null);
+					const errMsg: string | undefined = body?.error?.message;
+					setStatus('invalid');
+					setMessage(errMsg || `Invalid key (HTTP ${res.status}).`);
+				}
+			} else {
+				// OpenRouter exposes a dedicated auth endpoint that returns
+				// metadata about the key (label, usage, limit) on success.
+				const res = await fetch('https://openrouter.ai/api/v1/auth/key', {
+					headers: { Authorization: `Bearer ${apiKey}` },
+				});
+				if (res.ok) {
+					const body = await res.json().catch(() => null);
+					const data = body?.data;
+					let info = 'Key is valid.';
+					if (data && typeof data.usage === 'number') {
+						const used = data.usage;
+						const limit = data.limit; // may be null (no cap)
+						info = limit != null
+							? `Key is valid — $${used.toFixed(2)} used of $${Number(limit).toFixed(2)}.`
+							: `Key is valid — $${used.toFixed(2)} used.`;
+					}
+					setStatus('valid');
+					setMessage(info);
+				} else {
+					const body = await res.json().catch(() => null);
+					const errMsg: string | undefined = body?.error?.message;
+					setStatus('invalid');
+					setMessage(errMsg || `Invalid key (HTTP ${res.status}).`);
+				}
+			}
+		} catch (err) {
+			const msg = err instanceof Error ? err.message : String(err);
+			setStatus('error');
+			setMessage(`Network error: ${msg}`);
+		}
+	};
+
+	const badgeColor =
+		status === 'valid' ? 'text-emerald-400' :
+			status === 'invalid' ? 'text-red-400' :
+				status === 'error' ? 'text-amber-400' :
+					'text-void-fg-3';
+	const Icon =
+		status === 'valid' ? <Check className='w-4 h-4 shrink-0' /> :
+			status === 'invalid' || status === 'error' ? <X className='w-4 h-4 shrink-0' /> :
+				null;
+
+	const label = status === 'checking' ? 'Checking…' : 'Verify Key';
+	const isBusy = status === 'checking';
+
+	return (
+		<div className='mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm'>
+			<button
+				type='button'
+				onClick={runVerification}
+				disabled={isBusy}
+				className={`
+					px-3 py-1 rounded border border-void-border-2 bg-void-bg-2 text-void-fg-1
+					${isBusy ? 'opacity-60 cursor-not-allowed' : 'hover:bg-void-bg-2-hover'}
+					transition-colors
+				`}
+			>
+				{label}
+			</button>
+			{status !== 'idle' && (
+				<span className={`flex items-center gap-1 ${badgeColor}`}>
+					{Icon}
+					<span className='break-words'>{message}</span>
+				</span>
+			)}
+		</div>
+	);
+};
+
 const AddProvidersPage = ({ pageIndex, setPageIndex }: { pageIndex: number, setPageIndex: (index: number) => void }) => {
 	const [currentTab, setCurrentTab] = useState<TabName>('Free');
 	const settingsState = useSettingsState();
@@ -224,6 +347,9 @@ const AddProvidersPage = ({ pageIndex, setPageIndex }: { pageIndex: number, setP
 					<div>
 						<SettingsForProvider providerName={providerName} showProviderTitle={false} showProviderSuggestions={true} />
 
+						{currentTab === 'Free' && (providerName === 'gemini' || providerName === 'openRouter') && (
+							<VerifyKeyButton providerName={providerName} />
+						)}
 					</div>
 					{providerName === 'ollama' && <OllamaSetupInstructions />}
 				</div>
@@ -547,7 +673,7 @@ const VoidOnboardingContent = () => {
 					voidMetricsService.capture('Completed Onboarding', { selectedProviderName, wantToUseOption })
 				}}
 				ringSize={voidSettingsState.globalSettings.isOnboardingComplete ? 'screen' : undefined}
-			>Enter the Void</PrimaryActionButton>
+			>Enter SinWeave</PrimaryActionButton>
 		</div>
 	</div>
 
@@ -596,7 +722,7 @@ const VoidOnboardingContent = () => {
 		0: <OnboardingPageShell
 			content={
 				<div className='flex flex-col items-center gap-8'>
-					<div className="text-5xl font-light text-center">Welcome to Void</div>
+					<div className="text-5xl font-light text-center">Welcome to SinWeave</div>
 
 					{/* Slice of Void image */}
 					<div className='max-w-md w-full h-[30vh] mx-auto flex items-center justify-center'>

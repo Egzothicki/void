@@ -1396,7 +1396,7 @@ export const Settings = () => {
 								<div>
 									<ErrorBoundary>
 										<h2 className='text-3xl mb-2'>One-Click Switch</h2>
-										<h4 className='text-void-fg-3 mb-4'>{`Transfer your editor settings into Void.`}</h4>
+										<h4 className='text-void-fg-3 mb-4'>{`Transfer your editor settings into SinWeave.`}</h4>
 
 										<div className='flex flex-col gap-2'>
 											<OneClickSwitchButton className='w-48' fromEditor="VS Code" />

@@ -147,6 +147,69 @@
 	background-color: var(--void-bg-3) !important;
 }
 
+/* ==========================================================================
+   SinWeave — warm-dark palette (onboarding-only)
+   --------------------------------------------------------------------------
+   Activated by the `sinweave-warm` class on the onboarding root. Overrides
+   the cascading `--void-*` custom properties inside that subtree only, so
+   the rest of the editor keeps respecting the user's VS Code color theme.
+
+   Palette mirrors the product site: warm near-black surfaces, cream
+   typography, amber accent. Any descendant using Tailwind utilities like
+   `bg-void-bg-2`, `text-void-fg-3`, or `border-void-border-2` automatically
+   picks up the new values via the CSS variable cascade — no Tailwind
+   rebuild required.
+   ========================================================================== */
+.sinweave-warm {
+	/* Surfaces — light to dark */
+	--void-bg-1:        #14100b;   /* input fields, raised pills        */
+	--void-bg-1-alt:    #1a150f;   /* secondary raised surfaces         */
+	--void-bg-2:        #110f0b;   /* sidebar / section backgrounds     */
+	--void-bg-2-alt:    #120f0a;   /* hairline-lighter than bg-2        */
+	--void-bg-2-hover:  #1a160f;   /* hover state                       */
+	--void-bg-3:        #0b0a08;   /* the outer canvas                  */
+
+	/* Foreground — cream stepping down to faint */
+	--void-fg-0:        #f4eadf;   /* headings (slightly brighter)      */
+	--void-fg-1:        #eadfd3;   /* primary text, matches logo stroke */
+	--void-fg-2:        #bfb2a1;   /* body text                         */
+	--void-fg-3:        #7d7366;   /* muted / placeholders              */
+	--void-fg-4:        #4a433a;   /* deemphasized                      */
+
+	/* Borders — warm browns instead of blue-gray */
+	--void-border-1:    #3c3428;
+	--void-border-2:    #2a241d;
+	--void-border-3:    #221d17;
+	--void-border-4:    #3c3428;
+
+	/* Accents — amber highlight, warm warning */
+	--void-link-color:  #d4a877;
+	--void-ring-color:  #d4a877;
+	--void-warning:     #d4a877;
+
+	color-scheme: dark;
+}
+
+/* A couple of hardcoded Void colors aren't theme-variable-driven — re-tint
+   them here so the onboarding doesn't show blue splashes. */
+.sinweave-warm .void-link {
+	color: var(--void-link-color);
+}
+.sinweave-warm .void-openfolder-button {
+	background-color: #d4a877;
+	color: #0b0a08;
+}
+.sinweave-warm .void-openfolder-button:hover,
+.sinweave-warm .void-openfolder-button:active {
+	background-color: #eadfd3;
+}
+
+/* Selection color inside the onboarding */
+.sinweave-warm ::selection {
+	background: #d4a877;
+	color: #0b0a08;
+}
+
 /* Add void-scrollable-element styles to match */
 .void-scrollable-element {
 	background-color: var(--vscode-editor-background);

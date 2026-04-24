@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en" data-theme="warm-dark">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="color-scheme" content="dark" />
+	<meta name="theme-color" content="#0b0a08" />
+
+	<title>SinWeave — the AI editor you actually control</title>
+	<meta name="description" content="SinWeave is an open-source AI code editor. Bring your own keys, run models locally, and keep your code on your machine. Built on VS Code." />
+
+	<!-- Open Graph / Twitter -->
+	<meta property="og:title" content="SinWeave — the AI editor you actually control" />
+	<meta property="og:description" content="Open-source AI code editor. Your keys. Your code. Your rules." />
+	<meta property="og:type" content="website" />
+	<meta property="og:image" content="./assets/og-image.png" />
+	<meta name="twitter:card" content="summary_large_image" />
+
+	<!-- Icons -->
+	<link rel="icon" type="image/png" href="./assets/favicon.png" />
+	<link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
+
+	<!-- Fonts: Fraunces (display serif), IBM Plex Sans (body), IBM Plex Mono (technical) -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+	/>
+
+	<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+	<!-- Grain + grid overlays (decorative, pointer-events: none) -->
+	<div class="overlay overlay--grid" aria-hidden="true"></div>
+	<div class="overlay overlay--grain" aria-hidden="true"></div>
+	<div class="overlay overlay--vignette" aria-hidden="true"></div>
+
+	<!-- ================================================== -->
+	<!--  TOP BAR                                            -->
+	<!-- ================================================== -->
+	<header class="topbar" role="banner">
+		<a class="topbar__brand" href="#top" aria-label="SinWeave home">
+			<img src="./assets/logo-white.png" alt="" width="28" height="28" />
+			<span class="brand-mark">
+				<span class="brand-mark__name">SinWeave</span>
+				<span class="brand-mark__build" data-build>v1.0.0-α</span>
+			</span>
+		</a>
+
+		<nav class="topbar__nav" aria-label="Primary">
+			<a href="#features">Features</a>
+			<a href="#demo">Demo</a>
+			<a href="#models">Models</a>
+			<a href="#faq">FAQ</a>
+			<a href="https://github.com/Egzothicki/void" rel="noopener">Source</a>
+		</nav>
+
+		<a class="btn btn--tiny" href="#download" data-nav-download>
+			<span data-os-label>Download</span>
+			<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v7m0 0L3 5m3 3l3-3M2 10h8" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</a>
+	</header>
+
+	<!-- ================================================== -->
+	<!--  HERO                                               -->
+	<!-- ================================================== -->
+	<section class="hero" id="top">
+		<!-- Lab-notebook left rail: section marks -->
+		<aside class="rail rail--left" aria-hidden="true">
+			<div class="rail__tick"><span class="rail__num">§ 00</span><span class="rail__label">cold start</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 01</span><span class="rail__label">features</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 02</span><span class="rail__label">demo</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 03</span><span class="rail__label">models</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 04</span><span class="rail__label">faq</span></div>
+		</aside>
+
+		<!-- Right-rail meta readout -->
+		<aside class="rail rail--right" aria-hidden="true">
+			<div class="readout">
+				<div class="readout__row"><span class="readout__k">BUILD</span><span class="readout__v" data-build>1.0.0-α</span></div>
+				<div class="readout__row"><span class="readout__k">LAT.</span><span class="readout__v" data-latency>∼ 120 ms</span></div>
+				<div class="readout__row"><span class="readout__k">HOST</span><span class="readout__v" data-host>local</span></div>
+				<div class="readout__row"><span class="readout__k">SIG.</span><span class="readout__v">A · sin(ωt)</span></div>
+			</div>
+		</aside>
+
+		<!-- Animated sine wave backdrop -->
+		<svg class="hero__wave" viewBox="0 0 1200 400" preserveAspectRatio="none" aria-hidden="true">
+			<defs>
+				<linearGradient id="waveFade" x1="0" y1="0" x2="1" y2="0">
+					<stop offset="0" stop-color="var(--c-cream)" stop-opacity="0" />
+					<stop offset="0.15" stop-color="var(--c-cream)" stop-opacity="0.55" />
+					<stop offset="0.85" stop-color="var(--c-cream)" stop-opacity="0.55" />
+					<stop offset="1" stop-color="var(--c-cream)" stop-opacity="0" />
+				</linearGradient>
+			</defs>
+			<path id="heroWave" d="" stroke="url(#waveFade)" stroke-width="1.3" fill="none" />
+			<path id="heroWaveGhost" d="" stroke="var(--c-cream)" stroke-width="0.6" stroke-opacity="0.25" fill="none" />
+		</svg>
+
+		<div class="hero__content">
+			<div class="hero__eyebrow">
+				<span class="pill">OPEN&nbsp;SOURCE</span>
+				<span class="eyebrow-rule"></span>
+				<span class="eyebrow-note">an AI code editor forked &amp; folded into a new shape</span>
+			</div>
+
+			<h1 class="hero__title">
+				<span class="hero__title-top">write code with AI.</span>
+				<span class="hero__title-accent"><em>keep</em> the keys.</span>
+			</h1>
+
+			<p class="hero__lede">
+				SinWeave is an open-source code editor with a native AI workflow.
+				Bring your own API keys, pipe in local models, and edit multi-file
+				projects at the speed of thought — no proxy, no middleman, no
+				vendor&nbsp;lock-in.
+			</p>
+
+			<div class="hero__actions">
+				<a class="btn btn--primary" id="heroDownloadBtn" href="#download" data-os-href>
+					<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M7 1v9m0 0L3.5 6.5M7 10l3.5-3.5M2 13h10" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<span>
+						<span class="btn__primary" data-os-primary>Download for Mac</span>
+						<span class="btn__secondary" data-os-secondary>Apple Silicon · universal DMG</span>
+					</span>
+				</a>
+				<a class="btn btn--ghost" href="https://github.com/Egzothicki/void" rel="noopener">
+					<svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+					View on GitHub
+				</a>
+			</div>
+
+			<div class="hero__ticker" aria-hidden="true">
+				<span>macOS arm64</span><em>·</em>
+				<span>macOS intel</span><em>·</em>
+				<span class="dim">Windows — soon</span><em>·</em>
+				<span class="dim">Linux — soon</span>
+			</div>
+		</div>
+
+		<!-- "Specimen" card: sits asymmetric to the right -->
+		<figure class="specimen" aria-label="Chat window specimen">
+			<figcaption class="specimen__cap">
+				<span class="specimen__num">Fig. 01</span>
+				<span class="specimen__title">chat · void scope · /src/api/auth.ts</span>
+				<span class="specimen__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+			</figcaption>
+			<div class="specimen__body">
+				<div class="msg msg--user">
+					<span class="msg__who">you</span>
+					<span class="msg__text">refactor this to use the new <code>SessionStore</code>, keep the existing error shapes.</span>
+				</div>
+				<div class="msg msg--ai">
+					<span class="msg__who">claude-4.6</span>
+					<span class="msg__text">
+						Scanning <code>auth.ts</code>, <code>sessions.ts</code>, and 3 callers. I'll
+						<strong>preserve</strong> <code>AuthError</code> and switch
+						<code>getToken()</code> to <code>SessionStore.read()</code>.
+					</span>
+				</div>
+				<div class="msg msg--diff">
+					<pre><span class="ln">  42</span><span class="del">- const token = await legacyTokens.get(userId)</span>
+<span class="ln">  42</span><span class="add">+ const token = await SessionStore.read(userId)</span>
+<span class="ln">  55</span><span class="ctx">  if (!token) throw new AuthError('expired')</span></pre>
+				</div>
+				<div class="msg msg--meta">
+					<span class="blip"></span>
+					<span>4 files changed · 38 +/– · 0.9s · direct to Anthropic</span>
+				</div>
+			</div>
+		</figure>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 01 · FEATURES                                    -->
+	<!-- ================================================== -->
+	<section class="section" id="features">
+		<header class="section__head">
+			<span class="section__num">§ 01</span>
+			<h2 class="section__title"><em>what</em> it does</h2>
+			<p class="section__sub">Six things SinWeave does that your editor probably doesn't.</p>
+		</header>
+
+		<div class="feature-grid">
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M4 20c4-9 8-9 12 0s8 9 12 0 8-9 8-9" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>Multi-file agents</h3>
+				<p>Ask for a change across the repo. SinWeave reads, reasons, and writes coherent diffs you can apply or reject one hunk at a time.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<rect x="6" y="6" width="28" height="28" rx="6" stroke="currentColor" fill="none" stroke-width="1.6"/>
+						<path d="M14 20h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+						<circle cx="14" cy="20" r="1.2" fill="currentColor"/>
+					</svg>
+				</div>
+				<h3>Bring your own key</h3>
+				<p>OpenAI, Anthropic, Gemini, OpenRouter, xAI, Mistral, Groq — plug in whatever you already pay for. Verify the key in-app before you start.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M20 6l12 7v14l-12 7L8 27V13z" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linejoin="round"/>
+						<path d="M20 14v8m-4-4h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>Local models, first-class</h3>
+				<p>Ollama, LM&nbsp;Studio, vLLM, and OpenAI-compatible endpoints auto-detect. Your code never leaves your machine if you don't want it to.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M20 6v28M6 20h28" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+						<circle cx="20" cy="20" r="6" stroke="currentColor" fill="none" stroke-width="1.6"/>
+					</svg>
+				</div>
+				<h3>Quick Edit (⌘K)</h3>
+				<p>Select, invoke, describe. A focused inline editor that rewrites the selection without leaving your cursor. No modal dance.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M8 12h24M8 20h18M8 28h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+						<circle cx="32" cy="28" r="4" stroke="currentColor" fill="none" stroke-width="1.6"/>
+					</svg>
+				</div>
+				<h3>Autocomplete that reads context</h3>
+				<p>Tab completion backed by your model of choice, aware of the file, the project, and your recent edits. Switch providers without switching editors.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M12 8v24M28 8v24M12 16h16M12 24h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>Runs on VS&nbsp;Code</h3>
+				<p>Every extension, every keybinding, every setting you already have. SinWeave is a fork that preserves what works and replaces the parts that don't.</p>
+			</article>
+
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 02 · DEMO                                        -->
+	<!-- ================================================== -->
+	<section class="section section--split" id="demo">
+		<header class="section__head">
+			<span class="section__num">§ 02</span>
+			<h2 class="section__title"><em>how</em> it feels</h2>
+			<p class="section__sub">A short loop. Think. Select. Ask. Apply.</p>
+		</header>
+
+		<div class="demo">
+
+			<ol class="demo__steps">
+				<li>
+					<span class="demo__step">01</span>
+					<div>
+						<h4>Open a file, start a chat.</h4>
+						<p>Drop a file into the chat panel or select a region. SinWeave builds the context; you write the prompt.</p>
+					</div>
+				</li>
+				<li>
+					<span class="demo__step">02</span>
+					<div>
+						<h4>Pick a model. Or don't.</h4>
+						<p>Defaults work. If you're tuning for cost, latency, or quality, switch providers per-feature in Settings.</p>
+					</div>
+				</li>
+				<li>
+					<span class="demo__step">03</span>
+					<div>
+						<h4>Review the diff.</h4>
+						<p>Every change ships as a reviewable patch with hunks you can accept, reject, or edit inline. No stealth writes.</p>
+					</div>
+				</li>
+				<li>
+					<span class="demo__step">04</span>
+					<div>
+						<h4>Keep working.</h4>
+						<p>Git history, extensions, debuggers, LSPs — all of VS&nbsp;Code stays intact. SinWeave adds; it doesn't remove.</p>
+					</div>
+				</li>
+			</ol>
+
+			<div class="demo__terminal" role="presentation">
+				<div class="demo__bar">
+					<i></i><i></i><i></i>
+					<span>~/sinweave — zsh</span>
+				</div>
+				<pre class="demo__body"><span class="p">$ </span><span class="c">sinweave .</span>
+<span class="m">→ starting local agent…</span>
+<span class="m">→ indexed 1,248 files · 84 ms</span>
+<span class="m">→ model: openrouter/claude-sonnet (usd 0.87 used of 10.00)</span>
+
+<span class="p">⌘K </span><span class="u">refactor auth.ts to use SessionStore</span>
+
+<span class="ok">✓ 4 files changed, 38 +/- 12 · ready to review</span>
+<span class="p">$ </span><span class="cursor"> </span></pre>
+			</div>
+
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 03 · MODELS                                      -->
+	<!-- ================================================== -->
+	<section class="section" id="models">
+		<header class="section__head">
+			<span class="section__num">§ 03</span>
+			<h2 class="section__title"><em>every</em> model</h2>
+			<p class="section__sub">Direct connections to whatever you already use. No middle tier.</p>
+		</header>
+
+		<ul class="providers" role="list">
+			<li><strong>OpenAI</strong><span>gpt-4.1, o3, o4-mini</span></li>
+			<li><strong>Anthropic</strong><span>claude 4, 3.7 sonnet, haiku</span></li>
+			<li><strong>Google Gemini</strong><span>2.5 pro, 2.5 flash · free tier</span></li>
+			<li><strong>OpenRouter</strong><span>400+ models · single key</span></li>
+			<li><strong>xAI</strong><span>grok 4</span></li>
+			<li><strong>Mistral</strong><span>medium, devstral</span></li>
+			<li><strong>Groq</strong><span>kimi, llama, deepseek</span></li>
+			<li><strong>DeepSeek</strong><span>v3.1, r1</span></li>
+			<li><strong>Ollama</strong><span>local · auto-detected</span></li>
+			<li><strong>LM Studio</strong><span>local · auto-detected</span></li>
+			<li><strong>vLLM</strong><span>self-hosted</span></li>
+			<li><strong>OpenAI-compatible</strong><span>anything else</span></li>
+		</ul>
+
+		<div class="privacy-note">
+			<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5l7-3z" stroke="currentColor" fill="none" stroke-width="1.4" stroke-linejoin="round"/><path d="M7 10l2 2 4-5" stroke="currentColor" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			<div>
+				<strong>Requests go straight from your editor to the provider.</strong>
+				SinWeave never proxies, logs, or stores your prompts or code. The
+				only servers involved are the ones you chose.
+			</div>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  DOWNLOAD                                           -->
+	<!-- ================================================== -->
+	<section class="download-section" id="download">
+		<div class="download">
+			<p class="download__eyebrow">Available for macOS · more platforms on the way</p>
+			<h2 class="download__title"><em>install</em> SinWeave</h2>
+			<div class="download__cards">
+				<a class="card card--primary" href="#" data-os-href-mac-arm data-variant="mac-arm">
+					<span class="card__kicker">macOS · Apple Silicon</span>
+					<span class="card__title">SinWeave&nbsp;.dmg</span>
+					<span class="card__meta">arm64 · signed · auto-update</span>
+					<span class="card__cta">Download →</span>
+				</a>
+				<a class="card" href="#" data-os-href-mac-x64 data-variant="mac-x64">
+					<span class="card__kicker">macOS · Intel</span>
+					<span class="card__title">SinWeave&nbsp;.dmg</span>
+					<span class="card__meta">x64 · signed · auto-update</span>
+					<span class="card__cta">Download →</span>
+				</a>
+				<a class="card card--soon" href="https://github.com/Egzothicki/void" aria-disabled="true" rel="noopener">
+					<span class="card__kicker">Windows</span>
+					<span class="card__title">Coming soon</span>
+					<span class="card__meta">x64 · arm64</span>
+					<span class="card__cta">Star on GitHub →</span>
+				</a>
+				<a class="card card--soon" href="https://github.com/Egzothicki/void" aria-disabled="true" rel="noopener">
+					<span class="card__kicker">Linux</span>
+					<span class="card__title">Coming soon</span>
+					<span class="card__meta">.deb · .rpm · AppImage</span>
+					<span class="card__cta">Star on GitHub →</span>
+				</a>
+			</div>
+			<p class="download__note">
+				Or <a href="https://github.com/Egzothicki/void/blob/main/HOW_TO_CONTRIBUTE.md" rel="noopener">build from source</a> — it's open, it's documented, it's yours.
+			</p>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 04 · FAQ                                         -->
+	<!-- ================================================== -->
+	<section class="section" id="faq">
+		<header class="section__head">
+			<span class="section__num">§ 04</span>
+			<h2 class="section__title"><em>questions</em></h2>
+		</header>
+		<div class="faq">
+			<details open>
+				<summary>Is SinWeave free?</summary>
+				<p>The editor is free and open-source (MIT). You pay whichever model provider you choose — or nothing at all, if you run local models with Ollama, LM Studio, or vLLM.</p>
+			</details>
+			<details>
+				<summary>Does SinWeave send my code anywhere I don't know about?</summary>
+				<p>No. API requests go directly from your editor to whichever provider you configured. There's no SinWeave telemetry server between you and the model. If you use only local models, nothing leaves your machine.</p>
+			</details>
+			<details>
+				<summary>How is this different from Cursor or Windsurf?</summary>
+				<p>SinWeave is open-source. You can read every line of the AI pipeline, fork it, change it, and ship it. You also control the keys; there's no required account, no metered plans, no mandatory cloud tier.</p>
+			</details>
+			<details>
+				<summary>Will my VS Code extensions work?</summary>
+				<p>Yes. SinWeave is a fork of VS Code — the extension model, keybindings, themes, and settings files are identical.</p>
+			</details>
+			<details>
+				<summary>What about auto-updates?</summary>
+				<p>Packaged releases ship with the same auto-update mechanism as VS Code, pointed at the SinWeave release feed. You can also disable updates and build from source.</p>
+			</details>
+			<details>
+				<summary>Can I use this in a company?</summary>
+				<p>Yes. MIT-licensed. Use it, fork it, redistribute it. The model you choose may have its own terms — check your provider.</p>
+			</details>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  FOOTER                                             -->
+	<!-- ================================================== -->
+	<footer class="foot" role="contentinfo">
+		<div class="foot__grid">
+			<div class="foot__brand">
+				<img src="./assets/logo-white.png" alt="" width="36" height="36" />
+				<p class="foot__name">SinWeave</p>
+				<p class="foot__blurb">An AI-native editor built on VS&nbsp;Code. Your code, your keys, your rules.</p>
+			</div>
+			<div class="foot__col">
+				<h5>Product</h5>
+				<a href="#features">Features</a>
+				<a href="#demo">Demo</a>
+				<a href="#models">Models</a>
+				<a href="#download">Download</a>
+			</div>
+			<div class="foot__col">
+				<h5>Project</h5>
+				<a href="https://github.com/Egzothicki/void" rel="noopener">GitHub</a>
+				<a href="https://github.com/Egzothicki/void/releases" rel="noopener">Releases</a>
+				<a href="https://github.com/Egzothicki/void/blob/main/HOW_TO_CONTRIBUTE.md" rel="noopener">Build from source</a>
+				<a href="https://github.com/Egzothicki/void/issues" rel="noopener">Issues</a>
+			</div>
+			<div class="foot__col">
+				<h5>Legal</h5>
+				<a href="https://github.com/Egzothicki/void/blob/main/LICENSE.txt" rel="noopener">License (MIT)</a>
+				<a href="https://github.com/Egzothicki/void/blob/main/LICENSE-VS-Code.txt" rel="noopener">VS Code license</a>
+			</div>
+		</div>
+		<div class="foot__line">
+			<span>© SinWeave · MIT · <span data-year></span></span>
+			<span>Built on the shoulders of <a href="https://github.com/microsoft/vscode" rel="noopener">VS Code</a> &amp; <a href="https://github.com/voideditor/void" rel="noopener">Void</a>.</span>
+		</div>
+	</footer>
+
+	<script src="./main.js"></script>
+</body>
+</html>

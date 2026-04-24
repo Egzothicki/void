@@ -76,6 +76,12 @@
 	background-image: url('./void_cube_noshadow.png'); /* // Void */
 }
 
+/* SinWeave onboarding logo: overrides the icon used on the "Welcome to SinWeave" screen.
+   Scoped to `.void-void-icon` only, so the editor-group watermark (`.letterpress`) is unaffected. */
+.void-void-icon {
+	background-image: url('./sinweave-logo.png');
+}
+
 .monaco-workbench .part.editor > .content:not(.empty) .editor-group-container > .editor-group-watermark > .shortcuts,
 .monaco-workbench .part.editor > .content.auxiliary .editor-group-container > .editor-group-watermark > .shortcuts,
 .monaco-workbench .part.editor > .content .editor-group-container.max-height-478px > .editor-group-watermark > .shortcuts {
