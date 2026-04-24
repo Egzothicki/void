@@ -6,12 +6,12 @@
 	<meta name="color-scheme" content="dark" />
 	<meta name="theme-color" content="#0b0a08" />
 
-	<title>SinWeave — the AI editor you actually control</title>
-	<meta name="description" content="SinWeave is an open-source AI code editor. Bring your own keys, run models locally, and keep your code on your machine. Built on VS Code." />
+	<title>SinWeave — the AI code editor you actually control</title>
+	<meta name="description" content="SinWeave is a free AI code editor. Bring your own keys, run the best models, and keep your code on your machine. Full control, no middleman." />
 
 	<!-- Open Graph / Twitter -->
-	<meta property="og:title" content="SinWeave — the AI editor you actually control" />
-	<meta property="og:description" content="Open-source AI code editor. Your keys. Your code. Your rules." />
+	<meta property="og:title" content="SinWeave — the AI code editor you actually control" />
+	<meta property="og:description" content="A free AI code editor. Best models. Full control. Your keys, your code, your machine." />
 	<meta property="og:type" content="website" />
 	<meta property="og:image" content="./assets/og-image.png" />
 	<meta name="twitter:card" content="summary_large_image" />
@@ -53,7 +53,6 @@
 			<a href="#demo">Demo</a>
 			<a href="#models">Models</a>
 			<a href="#faq">FAQ</a>
-			<a href="https://github.com/Egzothicki/void" rel="noopener">Source</a>
 		</nav>
 
 		<a class="btn btn--tiny" href="#download" data-nav-download>
@@ -144,7 +143,7 @@
 		<figure class="specimen" aria-label="Chat window specimen">
 			<figcaption class="specimen__cap">
 				<span class="specimen__num">Fig. 01</span>
-				<span class="specimen__title">chat · void scope · /src/api/auth.ts</span>
+				<span class="specimen__title">chat · sinweave scope · /src/api/auth.ts</span>
 				<span class="specimen__lights" aria-hidden="true"><i></i><i></i><i></i></span>
 			</figcaption>
 			<div class="specimen__body">
@@ -246,8 +245,8 @@
 						<path d="M12 8v24M28 8v24M12 16h16M12 24h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
 					</svg>
 				</div>
-				<h3>Runs on VS&nbsp;Code</h3>
-				<p>Every extension, every keybinding, every setting you already have. SinWeave is a fork that preserves what works and replaces the parts that don't.</p>
+				<h3>Familiar by design</h3>
+				<p>Every extension, every keybinding, every theme you rely on — already here, already wired up. Open SinWeave and keep shipping; no retraining your muscle memory.</p>
 			</article>
 
 		</div>
@@ -291,7 +290,7 @@
 					<span class="demo__step">04</span>
 					<div>
 						<h4>Keep working.</h4>
-						<p>Git history, extensions, debuggers, LSPs — all of VS&nbsp;Code stays intact. SinWeave adds; it doesn't remove.</p>
+						<p>Git history, extensions, debuggers, LSPs — everything your editor already does, untouched. SinWeave adds; it doesn't take anything away.</p>
 					</div>
 				</li>
 			</ol>
@@ -370,21 +369,21 @@
 					<span class="card__meta">x64 · signed · auto-update</span>
 					<span class="card__cta">Download →</span>
 				</a>
-				<a class="card card--soon" href="https://github.com/Egzothicki/void" aria-disabled="true" rel="noopener">
+				<div class="card card--soon" aria-disabled="true">
 					<span class="card__kicker">Windows</span>
 					<span class="card__title">Coming soon</span>
 					<span class="card__meta">x64 · arm64</span>
-					<span class="card__cta">Star on GitHub →</span>
-				</a>
-				<a class="card card--soon" href="https://github.com/Egzothicki/void" aria-disabled="true" rel="noopener">
+					<span class="card__cta">In the works</span>
+				</div>
+				<div class="card card--soon" aria-disabled="true">
 					<span class="card__kicker">Linux</span>
 					<span class="card__title">Coming soon</span>
 					<span class="card__meta">.deb · .rpm · AppImage</span>
-					<span class="card__cta">Star on GitHub →</span>
-				</a>
+					<span class="card__cta">In the works</span>
+				</div>
 			</div>
 			<p class="download__note">
-				Or <a href="https://github.com/Egzothicki/void/blob/main/HOW_TO_CONTRIBUTE.md" rel="noopener">build from source</a> — it's open, it's documented, it's yours.
+				Signed &amp; notarized. Requires macOS 11 or later · 8&nbsp;GB&nbsp;RAM recommended.
 			</p>
 		</div>
 	</section>
@@ -400,27 +399,27 @@
 		<div class="faq">
 			<details open>
 				<summary>Is SinWeave free?</summary>
-				<p>The editor is free and open-source (MIT). You pay whichever model provider you choose — or nothing at all, if you run local models with Ollama, LM Studio, or vLLM.</p>
+				<p>Yes. The editor itself is free — no seats, no tiers, no trial timers. If you bring an API key, you pay the model provider directly (not us). If you run local models with Ollama, LM&nbsp;Studio, or vLLM, you pay nothing at all.</p>
 			</details>
 			<details>
 				<summary>Does SinWeave send my code anywhere I don't know about?</summary>
-				<p>No. API requests go directly from your editor to whichever provider you configured. There's no SinWeave telemetry server between you and the model. If you use only local models, nothing leaves your machine.</p>
+				<p>No. API requests go straight from your editor to whichever provider you configured. There's no SinWeave server between you and the model. If you use only local models, nothing leaves your machine — ever.</p>
 			</details>
 			<details>
 				<summary>How is this different from Cursor or Windsurf?</summary>
-				<p>SinWeave is open-source. You can read every line of the AI pipeline, fork it, change it, and ship it. You also control the keys; there's no required account, no metered plans, no mandatory cloud tier.</p>
+				<p>No middleman, no required account, no metered plan, no mandatory cloud tier. You pick the models you want — frontier, budget, or fully local — and SinWeave wires them in directly. You keep the keys, the quotas, and the code.</p>
 			</details>
 			<details>
-				<summary>Will my VS Code extensions work?</summary>
-				<p>Yes. SinWeave is a fork of VS Code — the extension model, keybindings, themes, and settings files are identical.</p>
+				<summary>Will my extensions, keybindings, and themes carry over?</summary>
+				<p>Yes. The extensions, keybindings, themes, and settings you already rely on transfer in as-is. Open SinWeave and everything's where you left it.</p>
 			</details>
 			<details>
 				<summary>What about auto-updates?</summary>
-				<p>Packaged releases ship with the same auto-update mechanism as VS Code, pointed at the SinWeave release feed. You can also disable updates and build from source.</p>
+				<p>Packaged releases ship with a signed, notarized auto-updater. New versions install in the background when available; you can pause or disable updates anytime in Settings.</p>
 			</details>
 			<details>
-				<summary>Can I use this in a company?</summary>
-				<p>Yes. MIT-licensed. Use it, fork it, redistribute it. The model you choose may have its own terms — check your provider.</p>
+				<summary>Can I use this at work?</summary>
+				<p>Yes. SinWeave is free for individuals and teams — no per-seat fees. The model provider you plug in may have its own terms, so check with them if you're shipping on their API in production.</p>
 			</details>
 		</div>
 	</section>
@@ -433,7 +432,7 @@
 			<div class="foot__brand">
 				<img src="./assets/logo-white.png" alt="" width="36" height="36" />
 				<p class="foot__name">SinWeave</p>
-				<p class="foot__blurb">An AI-native editor built on VS&nbsp;Code. Your code, your keys, your rules.</p>
+				<p class="foot__blurb">An AI-native code editor. Your code, your keys, your rules.</p>
 			</div>
 			<div class="foot__col">
 				<h5>Product</h5>
@@ -442,22 +441,10 @@
 				<a href="#models">Models</a>
 				<a href="#download">Download</a>
 			</div>
-			<div class="foot__col">
-				<h5>Project</h5>
-				<a href="https://github.com/Egzothicki/void" rel="noopener">GitHub</a>
-				<a href="https://github.com/Egzothicki/void/releases" rel="noopener">Releases</a>
-				<a href="https://github.com/Egzothicki/void/blob/main/HOW_TO_CONTRIBUTE.md" rel="noopener">Build from source</a>
-				<a href="https://github.com/Egzothicki/void/issues" rel="noopener">Issues</a>
-			</div>
-			<div class="foot__col">
-				<h5>Legal</h5>
-				<a href="https://github.com/Egzothicki/void/blob/main/LICENSE.txt" rel="noopener">License (MIT)</a>
-				<a href="https://github.com/Egzothicki/void/blob/main/LICENSE-VS-Code.txt" rel="noopener">VS Code license</a>
-			</div>
 		</div>
 		<div class="foot__line">
-			<span>© SinWeave · MIT · <span data-year></span></span>
-			<span>Built on the shoulders of <a href="https://github.com/microsoft/vscode" rel="noopener">VS Code</a> &amp; <a href="https://github.com/voideditor/void" rel="noopener">Void</a>.</span>
+			<span>© <span data-year></span> SinWeave</span>
+			<span>Made for people who still want to write their own code.</span>
 		</div>
 	</footer>
 

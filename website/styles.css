@@ -969,9 +969,11 @@ p { margin: 0; }
 .card--primary .card__title { color: var(--c-amber); }
 .card--soon {
 	opacity: 0.55;
+	cursor: default;
 	pointer-events: auto;
 }
-.card--soon:hover { opacity: 0.85; }
+.card--soon:hover { opacity: 0.6; transform: none; border-color: var(--c-line); }
+.card--soon:hover::before { opacity: 0; }
 
 .download__note {
 	text-align: center;
@@ -1040,13 +1042,14 @@ p { margin: 0; }
 }
 .foot__grid {
 	display: grid;
-	grid-template-columns: 1.4fr repeat(3, 1fr);
-	gap: 40px;
+	grid-template-columns: minmax(280px, 2fr) 1fr;
+	gap: 48px;
 	padding-bottom: 48px;
 	border-bottom: 1px dashed var(--c-line);
+	align-items: start;
 }
 @media (max-width: 820px) {
-	.foot__grid { grid-template-columns: 1fr 1fr; }
+	.foot__grid { grid-template-columns: 1fr; gap: 32px; }
 }
 .foot__brand { display: flex; flex-direction: column; gap: 10px; }
 .foot__name {
