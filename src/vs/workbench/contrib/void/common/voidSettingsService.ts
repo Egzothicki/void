@@ -347,22 +347,71 @@ class VoidSettingsService extends Disposable implements IVoidSettingsService {
 	}
 
 
-	private async _readState(): Promise<VoidSettingsState> {
-		const encryptedState = this._storageService.get(VOID_SETTINGS_STORAGE_KEY, StorageScope.APPLICATION)
+	// Marker we prepend when we had to fall back to non-encrypted storage
+	// because safeStorage (OS keychain) was unavailable. On read we detect this
+	// marker and skip the decrypt call (which would just fail).
+	private static readonly PLAIN_STATE_PREFIX = 'sw-plain-v1:';
 
-		if (!encryptedState)
+	private async _readState(): Promise<VoidSettingsState> {
+		const storedBlob = this._storageService.get(VOID_SETTINGS_STORAGE_KEY, StorageScope.APPLICATION)
+
+		if (!storedBlob)
 			return defaultState()
 
-		const stateStr = await this._encryptionService.decrypt(encryptedState)
+		let stateStr: string
+		if (storedBlob.startsWith(VoidSettingsService.PLAIN_STATE_PREFIX)) {
+			// Fallback path written when encryption wasn't available at save time.
+			const b64 = storedBlob.slice(VoidSettingsService.PLAIN_STATE_PREFIX.length)
+			try {
+				stateStr = typeof atob === 'function'
+					? decodeURIComponent(escape(atob(b64)))
+					: Buffer.from(b64, 'base64').toString('utf8')
+			} catch (err) {
+				console.error('[SinWeave] failed to read plain-text settings fallback, resetting.', err)
+				return defaultState()
+			}
+		} else {
+			stateStr = await this._encryptionService.decrypt(storedBlob)
+		}
+
 		const state = JSON.parse(stateStr)
 		return state
 	}
 
 
+	// Persist state, but never let a persistence failure bubble up to callers.
+	// When safeStorage is unavailable (common after re-signing the app or
+	// keychain trust loss), encrypt() throws. If that exception propagates, the
+	// setter awaiting us never reaches `_onDidChangeState.fire()`, React never
+	// re-renders, and inputs like the onboarding API-key field silently revert
+	// to empty — the user sees their typing ignored.
+	//
+	// Strategy:
+	//   1. Try encrypted persistence (the happy path).
+	//   2. On failure, fall back to a prefixed base64 blob so the user's
+	//      settings still survive across restarts. This is stored in the
+	//      app's user storage (same place the encrypted blob lived), which is
+	//      already user-scoped.
+	//   3. In all cases, never throw — callers rely on this resolving so they
+	//      can fire their `onDidChangeState` event.
 	private async _storeState() {
-		const state = this.state
-		const encryptedState = await this._encryptionService.encrypt(JSON.stringify(state))
-		this._storageService.store(VOID_SETTINGS_STORAGE_KEY, encryptedState, StorageScope.APPLICATION, StorageTarget.USER);
+		const stateStr = JSON.stringify(this.state)
+		try {
+			const encryptedState = await this._encryptionService.encrypt(stateStr)
+			this._storageService.store(VOID_SETTINGS_STORAGE_KEY, encryptedState, StorageScope.APPLICATION, StorageTarget.USER);
+			return
+		} catch (err) {
+			console.warn('[SinWeave] safeStorage.encrypt failed, falling back to plain-text settings persistence.', err)
+		}
+		try {
+			const b64 = typeof btoa === 'function'
+				? btoa(unescape(encodeURIComponent(stateStr)))
+				: Buffer.from(stateStr, 'utf8').toString('base64')
+			const plainBlob = VoidSettingsService.PLAIN_STATE_PREFIX + b64
+			this._storageService.store(VOID_SETTINGS_STORAGE_KEY, plainBlob, StorageScope.APPLICATION, StorageTarget.USER);
+		} catch (err) {
+			console.error('[SinWeave] failed to persist settings (even plain-text fallback failed). State is still live in memory this session.', err)
+		}
 	}
 
 	setSettingOfProvider: SetSettingOfProviderFn = async (providerName, settingName, newVal) => {
