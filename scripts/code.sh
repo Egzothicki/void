@@ -29,6 +29,21 @@ function code() {
 		node build/lib/preLaunch.js
 	fi
 
+	# SinWeave: make sure the staged dev .app uses our custom icon.
+	# The vanilla stager only re-copies SinWeave.icns when the electron
+	# version changes, so the Dock icon would otherwise stay as whatever
+	# was first unpacked. This keeps it in sync with resources/darwin/code.icns.
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		DEV_ICNS="./.build/electron/$NAME.app/Contents/Resources/$NAME.icns"
+		SRC_ICNS="./resources/darwin/code.icns"
+		if [[ -f "$SRC_ICNS" && -f "$DEV_ICNS" ]]; then
+			if ! cmp -s "$SRC_ICNS" "$DEV_ICNS"; then
+				cp "$SRC_ICNS" "$DEV_ICNS"
+				touch "./.build/electron/$NAME.app"
+			fi
+		fi
+	fi
+
 	# Manage built-in extensions
 	if [[ "$1" == "--builtin" ]]; then
 		exec "$CODE" build/builtin

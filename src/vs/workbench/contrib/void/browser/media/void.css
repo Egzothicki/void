@@ -24,11 +24,12 @@
 }
 
 
-/* Renamed from void-watermark-button to void-openfolder-button */
+/* "Open Folder" button on the empty-editor watermark screen.
+   Hardcoded to match the SinWeave amber palette (formerly VS Code blue #306dce). */
 .void-openfolder-button {
     padding: 8px 20px;
-    background-color: #306dce;
-    color: white;
+    background-color: #d4a877;    /* amber */
+    color: #0b0a08;               /* warm near-black for contrast */
     border: none;
     border-radius: 4px;
     outline: none !important;
@@ -37,18 +38,19 @@
 	transition: background-color 0.2s ease;
 }
 .void-openfolder-button:hover {
-    background-color: #2563eb;
+    background-color: #eadfd3;    /* cream on hover */
 }
 .void-openfolder-button:active {
-    background-color: #2563eb;
+    background-color: #eadfd3;
 }
 
-/* Added for Open SSH button with slightly darker color */
+/* "Open Remote" button — kept neutral (darker), sits alongside the amber CTA
+   as a secondary action so the primary one doesn't lose its pop. */
 .void-openssh-button {
     padding: 8px 20px;
-    background-color: #656565; /* Slightly darker than the #5a5a5a in the TS file */
-    color: white;
-    border: none;
+    background-color: #2a241d;    /* warm line-color */
+    color: #eadfd3;               /* cream */
+    border: 1px solid #3c3428;
     border-radius: 4px;
     outline: none !important;
 	box-shadow: none !important;
@@ -56,10 +58,10 @@
     transition: background-color 0.2s ease;
 }
 .void-openssh-button:hover {
-    background-color: #474747; /* Darker on hover */
+    background-color: #3c3428;
 }
 .void-openssh-button:active {
-    background-color: #474747;
+    background-color: #3c3428;
 }
 
 
@@ -85,7 +87,7 @@
 }
 
 .void-link {
-	color: #3b82f6;
+	color: #d4a877;   /* SinWeave amber (was #3b82f6) */
 	cursor: pointer;
 	transition: all 0.2s ease;
 }
