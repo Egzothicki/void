@@ -23,6 +23,8 @@ product.overrides.json
 .vscode-test
 
 # Void added these:
+# Contains real signing credentials — do not commit
+docs/APPLE_NOTARIZATION.md
 .tmp/
 .tmp2/
 .tool-versions
