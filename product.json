@@ -1,8 +1,8 @@
 {
 	"nameShort": "SinWeave",
 	"nameLong": "SinWeave",
-	"voidVersion": "1.4.9",
-	"voidRelease": "0044",
+	"voidVersion": "1.4.10",
+	"voidRelease": "0045",
 	"applicationName": "sinweave",
 	"dataFolderName": ".sinweave-editor",
 	"win32MutexName": "sinweave",
