@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14        # Apple Silicon M1 — fastest free macOS runner
-    timeout-minutes: 360     # 6 hour cap (build typically takes ~5.5 hrs)
+    runs-on: macos-14-xlarge  # 12-core M1, 30GB RAM — needed to finish within 6hr limit
+    timeout-minutes: 360
 
     steps:
       - name: Checkout
