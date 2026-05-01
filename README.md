@@ -1,41 +1,51 @@
-# Welcome to Void.
+# SinWeave
 
-<div align="center">
-	<img
-		src="./src/vs/workbench/browser/parts/editor/media/slice_of_void.png"
-	 	alt="Void Welcome"
-		width="300"
-	 	height="300"
-	/>
-</div>
+SinWeave is an AI coding editor built on a fork of [Void](https://github.com/voideditor/void), which is itself a fork of [VS Code](https://github.com/microsoft/vscode).
 
-Void is the open-source Cursor alternative.
+It gives you AI agents directly in your editor — chat with your codebase, apply changes with full diff visibility, and connect to any model or run one locally. Messages go straight to providers; no data is retained.
 
-Use AI agents on your codebase, checkpoint and visualize changes, and bring any model or host locally. Void sends messages directly to providers without retaining your data.
+---
 
-This repo contains the full sourcecode for Void. If you're new, welcome!
+## Download
 
-- 🧭 [Website](https://voideditor.com)
+Get the latest macOS build from the [releases page](https://github.com/Egzothicki/void/releases/latest).
 
-- 👋 [Discord](https://discord.gg/RSNjgaugJs)
+| Platform | Download |
+|----------|----------|
+| macOS Apple Silicon | [SinWeave-darwin-arm64.dmg](https://github.com/Egzothicki/void/releases/latest/download/SinWeave-darwin-arm64.dmg) |
+| macOS Intel | [SinWeave-darwin-x64.dmg](https://github.com/Egzothicki/void/releases/latest/download/SinWeave-darwin-x64.dmg) |
 
-- 🚙 [Project Board](https://github.com/orgs/voideditor/projects/2)
+---
 
+## Building from source
 
-## Note
+**Prerequisites:** Node.js (see `.nvmrc`), Python 3, Xcode Command Line Tools.
 
-We've paused work on the Void IDE (this repo) to explore a few novel coding ideas. We want to focus on innovation over feature-parity. Void will continue running, but without maintenance some existing features might stop working over time. Depending on the direction of our new work, we might not resume Void as an IDE.
+```bash
+# Install dependencies
+npm install
 
-We won't be actively reviewing Issues and PRs, but we will respond to all [email](mailto:hello@voideditor.com) inquiries on building and maintaining your own version of Void while we're paused. 
+# Build the macOS app (Apple Silicon, minified)
+./scripts/package-mac.sh arm64
 
-## Reference
+# Build unminified (faster, for development)
+./scripts/package-mac.sh arm64 dev
+```
 
-Void is a fork of the [vscode](https://github.com/microsoft/vscode) repository. For a guide to the codebase, see [VOID_CODEBASE_GUIDE](https://github.com/voideditor/void/blob/main/VOID_CODEBASE_GUIDE.md).
+The script produces:
+- `../VSCode-darwin-<arch>/SinWeave.app` — the app bundle
+- `../SinWeave-darwin-<arch>.dmg` — drag-to-Applications installer
 
-For a guide on how to develop your own version of Void, see [HOW_TO_CONTRIBUTE](https://github.com/voideditor/void/blob/main/HOW_TO_CONTRIBUTE.md) and [void-builder](https://github.com/voideditor/void-builder).
+First build takes roughly 10–25 minutes on Apple Silicon. See [`docs/APPLE_NOTARIZATION.md`](docs/APPLE_NOTARIZATION.md) for signing and notarization.
 
+---
 
+## Project structure
 
+SinWeave-specific code lives in `src/vs/workbench/contrib/void/`. Everything outside that folder is inherited from VS Code via the Void fork and largely unchanged.
 
-## Support
-You can always reach us in our Discord server or contact us via email: hello@voideditor.com.
+---
+
+## Credits
+
+Built on top of [Void](https://github.com/voideditor/void) and [VS Code](https://github.com/microsoft/vscode).

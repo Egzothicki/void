@@ -627,6 +627,9 @@ export class Mangler {
 		await Promise.all(renameResults).then((result) => {
 			for (const { newName, locations } of result) {
 				for (const loc of locations) {
+					if (loc.fileName.includes('/node_modules/')) {
+						continue;
+					}
 					appendRename(newName, loc);
 				}
 			}

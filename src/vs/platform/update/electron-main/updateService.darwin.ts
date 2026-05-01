@@ -16,7 +16,7 @@ import { IProductService } from '../../product/common/productService.js';
 import { IRequestService } from '../../request/common/request.js';
 import { ITelemetryService } from '../../telemetry/common/telemetry.js';
 import { IUpdate, State, StateType, UpdateType } from '../common/update.js';
-import { AbstractUpdateService, createUpdateURL, UpdateErrorClassification } from './abstractUpdateService.js';
+import { AbstractUpdateService, UpdateErrorClassification } from './abstractUpdateService.js';
 
 export class DarwinUpdateService extends AbstractUpdateService implements IRelaunchHandler {
 
@@ -80,7 +80,9 @@ export class DarwinUpdateService extends AbstractUpdateService implements IRelau
 		} else {
 			assetID = this.productService.darwinUniversalAssetId;
 		}
-		const url = createUpdateURL(assetID, quality, this.productService);
+		// Use voidVersion for semver-based comparison; fall back to commit hash
+		const version = this.productService.voidVersion ?? this.productService.commit;
+		const url = `${this.productService.updateUrl}/api/update/${assetID}/${quality}/${version}`;
 		try {
 			electron.autoUpdater.setFeedURL({ url });
 		} catch (e) {

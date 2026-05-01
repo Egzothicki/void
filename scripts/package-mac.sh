@@ -88,7 +88,19 @@ if [[ ! -d "$REPO_ROOT/node_modules" ]]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 1. Build the React/Tailwind bundle that the editor's renderer uses. The
+# 1. Fast type-check — catches TypeScript errors in seconds before committing
+#    to the multi-hour compile. Fails immediately on any type error.
+# ---------------------------------------------------------------------------
+echo "==> Type-checking src/ (tsc --noEmit)..."
+if ! npx tsc --project "$REPO_ROOT/src/tsconfig.json" --noEmit; then
+	echo ""
+	echo "ERROR: TypeScript type errors found. Fix them before building." >&2
+	exit 1
+fi
+echo "    Type check passed."
+
+# ---------------------------------------------------------------------------
+# 2. Build the React/Tailwind bundle that the editor's renderer uses. The
 #    normal watch mode covers this, but in case the user hasn't run it
 #    recently, do a one-shot build to be safe.
 # ---------------------------------------------------------------------------
@@ -115,7 +127,17 @@ echo "==> App built: $APP_BUNDLE"
 du -sh "$APP_BUNDLE"
 
 # ---------------------------------------------------------------------------
-# 3. Stage the .app alongside an Applications symlink so users can drag-drop.
+# 3. Create a .zip of the .app for Squirrel in-app updates.
+#    (The DMG is for first install; Squirrel requires a zip for delta updates.)
+# ---------------------------------------------------------------------------
+ZIP_FINAL="$BUILD_ROOT/SinWeave-darwin-${ARCH}.zip"
+echo "==> Zipping app for Squirrel updates..."
+ditto -c -k --sequesterRsrc --keepParent "$APP_BUNDLE" "$ZIP_FINAL"
+echo "    $ZIP_FINAL"
+du -sh "$ZIP_FINAL"
+
+# ---------------------------------------------------------------------------
+# 4. Stage the .app alongside an Applications symlink so users can drag-drop.
 # ---------------------------------------------------------------------------
 echo "==> Staging DMG contents..."
 rm -rf "$STAGING" "$DMG_FINAL"
@@ -124,7 +146,7 @@ cp -R "$APP_BUNDLE" "$STAGING/"
 ln -s /Applications "$STAGING/Applications"
 
 # ---------------------------------------------------------------------------
-# 4. Build the DMG with hdiutil (built-in, no extra deps).
+# 5. Build the DMG with hdiutil (built-in, no extra deps).
 #    UDZO = zlib-compressed; decent size-to-speed trade-off.
 # ---------------------------------------------------------------------------
 echo "==> Creating DMG with hdiutil..."
@@ -149,16 +171,19 @@ du -sh "$DMG_FINAL"
 # ---------------------------------------------------------------------------
 cat <<EOF
 
-Next steps to make this downloadable from your site:
+Next steps to publish this release:
 
-    gh release create v1.0.0 \\
+    gh release create vX.X.X \\
         "$DMG_FINAL" \\
-        --title "SinWeave 1.0.0" \\
-        --notes "First public build."
+        "$ZIP_FINAL" \\
+        --title "SinWeave X.X.X" \\
+        --notes "Release notes here."
 
-Make sure the DMG filename matches SinWeave-darwin-${ARCH}.dmg — the site's
-download buttons point at:
+Both files are required:
+  DMG  → first-time install (drag to Applications)
+  ZIP  → in-app Squirrel auto-updates
 
+Download URLs the site uses:
     https://github.com/Egzothicki/void/releases/latest/download/SinWeave-darwin-${ARCH}.dmg
 
 EOF

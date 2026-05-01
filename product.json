@@ -1,7 +1,7 @@
 {
 	"nameShort": "SinWeave",
 	"nameLong": "SinWeave",
-	"voidVersion": "1.4.10",
+	"voidVersion": "1.4.11",
 	"voidRelease": "0045",
 	"applicationName": "sinweave",
 	"dataFolderName": ".sinweave-editor",
@@ -36,6 +36,9 @@
 		"serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
 		"itemUrl": "https://marketplace.visualstudio.com/items"
 	},
+	"quality": "stable",
+	"updateUrl": "https://sinweave-updater.info-gorecki.workers.dev",
+	"downloadUrl": "https://github.com/Egzothicki/void/releases",
 	"builtInExtensions": [],
 	"linkProtectionTrustedDomains": [
 		"https://sinweave.com",
