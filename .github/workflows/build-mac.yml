@@ -25,6 +25,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build React bundle
         run: cd src/vs/workbench/contrib/void/browser/react && node build.js
