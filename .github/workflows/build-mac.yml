@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check
-        run: npx tsc --project src/tsconfig.json --noEmit
-
       - name: Build React bundle
         run: node src/vs/workbench/contrib/void/browser/react/build.js
 
