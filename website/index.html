@@ -34,7 +34,46 @@
 		"description": "SinWeave is a free AI code editor. Bring your own keys, run the best models, and keep your code on your machine.",
 		"url": "https://sinweave.com/",
 		"downloadUrl": "https://sinweave.com/#download",
+		"softwareVersion": "1.0.0",
+		"isAccessibleForFree": true,
+		"featureList": [
+			"Bring your own API keys",
+			"Run any model — frontier or local",
+			"Local-first privacy, no proxy",
+			"Multi-file agentic edits",
+			"VS Code compatible extensions, themes, keybindings"
+		],
 		"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+	}
+	</script>
+
+	<!-- Structured data: FAQ rich results -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": [
+			{
+				"@type": "Question",
+				"name": "Is SinWeave free?",
+				"acceptedAnswer": { "@type": "Answer", "text": "Yes. The editor is free — no seats, no tiers, no trial timers. Bring an API key and you pay the model provider directly. Run local models with Ollama, LM Studio, or vLLM and you pay nothing at all." }
+			},
+			{
+				"@type": "Question",
+				"name": "Does SinWeave send my code anywhere I don't know about?",
+				"acceptedAnswer": { "@type": "Answer", "text": "No. API requests go straight from your editor to whichever provider you configured. There is no SinWeave server between you and the model. Use only local models and nothing leaves your machine." }
+			},
+			{
+				"@type": "Question",
+				"name": "How is SinWeave different from Cursor or Windsurf?",
+				"acceptedAnswer": { "@type": "Answer", "text": "No middleman, no required account, no metered plan, no mandatory cloud tier. You pick the models — frontier, budget, or fully local — and SinWeave wires them in directly. You keep the keys, the quotas, and the code." }
+			},
+			{
+				"@type": "Question",
+				"name": "Will my extensions, keybindings, and themes carry over?",
+				"acceptedAnswer": { "@type": "Answer", "text": "Yes. SinWeave is a VS Code fork, so the extensions, keybindings, themes, and settings you already rely on transfer in as-is." }
+			}
+		]
 	}
 	</script>
 
@@ -72,7 +111,8 @@
 
 		<nav class="topbar__nav" aria-label="Primary">
 			<a href="#features">Features</a>
-			<a href="#demo">Demo</a>
+			<a href="#how">How it works</a>
+			<a href="#compare">Compare</a>
 			<a href="#models">Models</a>
 			<a href="#faq">FAQ</a>
 		</nav>
@@ -91,9 +131,10 @@
 		<aside class="rail rail--left" aria-hidden="true">
 			<div class="rail__tick"><span class="rail__num">§ 00</span><span class="rail__label">cold start</span></div>
 			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 01</span><span class="rail__label">features</span></div>
-			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 02</span><span class="rail__label">demo</span></div>
-			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 03</span><span class="rail__label">models</span></div>
-			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 04</span><span class="rail__label">faq</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 02</span><span class="rail__label">how it works</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 03</span><span class="rail__label">compare</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 04</span><span class="rail__label">models</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 05</span><span class="rail__label">faq</span></div>
 		</aside>
 
 		<!-- Right-rail meta readout -->
@@ -128,15 +169,15 @@
 			</div>
 
 			<h1 class="hero__title">
-				<span class="hero__title-top">A free AI code editor.</span>
-				<span class="hero__title-accent"><em>Best</em> models. <em>Full</em> control.</span>
+				<span class="hero__title-top">The AI code editor</span>
+				<span class="hero__title-accent">you <em>actually</em> control.</span>
 			</h1>
 
 			<p class="hero__lede">
-				SinWeave is a free, AI-native editor: wire in leading models with your
-				own API keys, or run them on your machine. You stay in the driver’s seat
-				— from prompt to multi-file edits, with no forced stack and no
-				middleman&nbsp;between you and the models.
+				SinWeave is a free, AI-native editor built on VS Code. Bring your own
+				API keys, run the <strong>best</strong> models — or your own, locally —
+				and keep your code on your machine. No middleman, no lock-in, no monthly
+				seat.
 			</p>
 
 			<div class="hero__actions">
@@ -147,11 +188,26 @@
 						<span class="btn__secondary" data-os-secondary>Apple Silicon · universal DMG</span>
 					</span>
 				</a>
-				<a class="btn btn--ghost" href="#features">
+				<a class="btn btn--ghost" href="#how">
 					<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-					What it does
+					See how it works
 				</a>
 			</div>
+
+			<ul class="hero__trust" role="list">
+				<li>
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l6 2.6v4.3C14 12 11.4 14.6 8 15.6 4.6 14.6 2 12 2 7.9V3.6L8 1z" stroke="currentColor" fill="none" stroke-width="1.3" stroke-linejoin="round"/><path d="M5.6 8l1.7 1.7L11 6" stroke="currentColor" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<span>Code never leaves your machine</span>
+				</li>
+				<li>
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v5m0 0L5.5 4M8 6.5 10.5 4M2.5 11.5h11" stroke="currentColor" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<span>100% free &amp; open-source</span>
+				</li>
+				<li>
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M8 2.5v11M4 4l8 8M12 4l-8 8" stroke="currentColor" fill="none" stroke-width="1.1" stroke-linecap="round"/></svg>
+					<span>Any model, any provider</span>
+				</li>
+			</ul>
 
 			<div class="hero__ticker" aria-hidden="true">
 				<span>macOS arm64</span><em>·</em>
@@ -194,27 +250,32 @@
 		</figure>
 	</section>
 
+	<!-- providers strip: reinforce bring-your-own-keys -->
+	<aside class="providers" aria-label="Supported model providers">
+		<span class="providers__label">Bring your own keys —</span>
+		<ul class="providers__list">
+			<li>OpenAI</li>
+			<li>Anthropic</li>
+			<li>Google</li>
+			<li>Mistral</li>
+			<li>DeepSeek</li>
+			<li>xAI</li>
+			<li>OpenRouter</li>
+			<li>Ollama&nbsp;· local</li>
+		</ul>
+	</aside>
+
 	<!-- ================================================== -->
 	<!--  § 01 · FEATURES                                    -->
 	<!-- ================================================== -->
 	<section class="section" id="features">
 		<header class="section__head">
 			<span class="section__num">§ 01</span>
-			<h2 class="section__title"><em>what</em> it does</h2>
-			<p class="section__sub">Six things SinWeave does that your editor probably doesn't.</p>
+			<h2 class="section__title"><em>your</em> keys. <em>your</em> models. <em>your</em> code.</h2>
+			<p class="section__sub">SinWeave puts every layer of the AI stack back in your hands — and keeps everything you already love about VS Code.</p>
 		</header>
 
 		<div class="feature-grid">
-
-			<article class="feature">
-				<div class="feature__mark">
-					<svg viewBox="0 0 40 40" aria-hidden="true">
-						<path d="M4 20c4-9 8-9 12 0s8 9 12 0 8-9 8-9" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round"/>
-					</svg>
-				</div>
-				<h3>Multi-file agents</h3>
-				<p>Ask for a change across the repo. SinWeave reads, reasons, and writes coherent diffs you can apply or reject one hunk at a time.</p>
-			</article>
 
 			<article class="feature">
 				<div class="feature__mark">
@@ -225,7 +286,7 @@
 					</svg>
 				</div>
 				<h3>Bring your own key</h3>
-				<p>OpenAI, Anthropic, Gemini, OpenRouter, xAI, Mistral, Groq — plug in whatever you already pay for. Verify the key in-app before you start.</p>
+				<p>OpenAI, Anthropic, Gemini, OpenRouter, xAI, Mistral, Groq — plug in whatever you already pay for. Verify the key in-app, then use the same quota everywhere.</p>
 			</article>
 
 			<article class="feature">
@@ -236,7 +297,17 @@
 					</svg>
 				</div>
 				<h3>Local models, first-class</h3>
-				<p>Ollama, LM&nbsp;Studio, vLLM, and OpenAI-compatible endpoints auto-detect. Your code never leaves your machine if you don't want it to.</p>
+				<p>Ollama, LM&nbsp;Studio, vLLM, and any OpenAI-compatible endpoint auto-detect. Run everything on your own hardware — your code never leaves the machine.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M4 20c4-9 8-9 12 0s8 9 12 0 8-9 8-9" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>Agentic multi-file edits</h3>
+				<p>Ask for a change across the repo. SinWeave reads, reasons, and writes coherent diffs you apply or reject one hunk at a time — never a stealth write.</p>
 			</article>
 
 			<article class="feature">
@@ -247,7 +318,7 @@
 					</svg>
 				</div>
 				<h3>Quick Edit (⌘K)</h3>
-				<p>Select, invoke, describe. A focused inline editor that rewrites the selection without leaving your cursor. No modal dance.</p>
+				<p>Select, invoke, describe. A focused inline editor rewrites the selection right where your cursor is — no modal dance, no context loss.</p>
 			</article>
 
 			<article class="feature">
@@ -257,8 +328,8 @@
 						<circle cx="32" cy="28" r="4" stroke="currentColor" fill="none" stroke-width="1.6"/>
 					</svg>
 				</div>
-				<h3>Autocomplete that reads context</h3>
-				<p>Tab completion backed by your model of choice, aware of the file, the project, and your recent edits. Switch providers without switching editors.</p>
+				<h3>Context-aware autocomplete</h3>
+				<p>Tab completion backed by your model of choice — aware of the file, the project, and your recent edits. Swap providers without switching editors.</p>
 			</article>
 
 			<article class="feature">
@@ -267,21 +338,21 @@
 						<path d="M12 8v24M28 8v24M12 16h16M12 24h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
 					</svg>
 				</div>
-				<h3>Familiar by design</h3>
-				<p>Every extension, every keybinding, every theme you rely on — already here, already wired up. Open SinWeave and keep shipping; no retraining your muscle memory.</p>
+				<h3>Every VS Code extension</h3>
+				<p>SinWeave is a true VS Code fork — your extensions, keybindings, themes and settings transfer in as-is. Open it and keep shipping; no muscle-memory tax.</p>
 			</article>
 
 		</div>
 	</section>
 
 	<!-- ================================================== -->
-	<!--  § 02 · DEMO                                        -->
+	<!--  § 02 · HOW IT WORKS                                -->
 	<!-- ================================================== -->
-	<section class="section section--split" id="demo">
+	<section class="section section--split" id="how">
 		<header class="section__head">
 			<span class="section__num">§ 02</span>
-			<h2 class="section__title"><em>how</em> it feels</h2>
-			<p class="section__sub">A short loop. Think. Select. Ask. Apply.</p>
+			<h2 class="section__title"><em>how</em> it works</h2>
+			<p class="section__sub">From download to your first AI edit in about two minutes. No account, no onboarding wizard.</p>
 		</header>
 
 		<div class="demo">
@@ -290,29 +361,22 @@
 				<li>
 					<span class="demo__step">01</span>
 					<div>
-						<h4>Open a file, start a chat.</h4>
-						<p>Drop a file into the chat panel or select a region. SinWeave builds the context; you write the prompt.</p>
+						<h4>Install &amp; open your project.</h4>
+						<p>Download, drag to Applications, open your folder. Your extensions, themes and keybindings are already there — it&#39;s the editor you know.</p>
 					</div>
 				</li>
 				<li>
 					<span class="demo__step">02</span>
 					<div>
-						<h4>Pick a model. Or don't.</h4>
-						<p>Defaults work. If you're tuning for cost, latency, or quality, switch providers per-feature in Settings.</p>
+						<h4>Paste a key, or point at a local model.</h4>
+						<p>Drop in an API key from any provider and verify it in-app — or let SinWeave auto-detect Ollama, LM&nbsp;Studio, or vLLM running on your machine.</p>
 					</div>
 				</li>
 				<li>
 					<span class="demo__step">03</span>
 					<div>
-						<h4>Review the diff.</h4>
-						<p>Every change ships as a reviewable patch with hunks you can accept, reject, or edit inline. No stealth writes.</p>
-					</div>
-				</li>
-				<li>
-					<span class="demo__step">04</span>
-					<div>
-						<h4>Keep working.</h4>
-						<p>Git history, extensions, debuggers, LSPs — everything your editor already does, untouched. SinWeave adds; it doesn't take anything away.</p>
+						<h4>Ask, review, apply.</h4>
+						<p>Chat across files or hit&nbsp;⌘K inline. Every change lands as a reviewable diff — accept, reject, or edit each hunk. Your Git history stays clean.</p>
 					</div>
 				</li>
 			</ol>
@@ -337,11 +401,60 @@
 	</section>
 
 	<!-- ================================================== -->
-	<!--  § 03 · MODELS                                      -->
+	<!--  § 03 · COMPARE                                     -->
+	<!-- ================================================== -->
+	<section class="section" id="compare">
+		<header class="section__head">
+			<span class="section__num">§ 03</span>
+			<h2 class="section__title"><em>why</em> not the cloud editors</h2>
+			<p class="section__sub">Cursor and the rest route your code through their servers and meter you monthly. SinWeave doesn&#39;t sit between you and the model at all.</p>
+		</header>
+
+		<div class="compare">
+			<div class="compare__row compare__row--head" role="row">
+				<span class="compare__label"></span>
+				<span class="compare__mine">SinWeave</span>
+				<span class="compare__theirs">Cloud AI editors</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Pricing</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Free — pay the model provider directly, or run local for $0</span>
+				<span class="compare__theirs"><i class="cx" aria-hidden="true">✕</i> $20&#8211;40 / month per seat, on top of usage</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Your code</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Stays on your machine — requests go straight to the provider</span>
+				<span class="compare__theirs"><i class="cx" aria-hidden="true">✕</i> Routed and indexed through a third-party server</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Model choice</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Any provider, any model, including fully local</span>
+				<span class="compare__theirs"><i class="cx" aria-hidden="true">✕</i> A curated list behind their proxy and their markup</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Account</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> None required — download and go</span>
+				<span class="compare__theirs"><i class="cx" aria-hidden="true">✕</i> Mandatory sign-up and login</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Extensions</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Full VS Code compatibility, out of the box</span>
+				<span class="compare__theirs"><i class="cw" aria-hidden="true">~</i> Usually forks of VS Code too — but on their terms</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Source</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Open — inspect it, fork it, build it yourself</span>
+				<span class="compare__theirs"><i class="cx" aria-hidden="true">✕</i> Closed, proprietary client</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 04 · MODELS                                      -->
 	<!-- ================================================== -->
 	<section class="section" id="models">
 		<header class="section__head">
-			<span class="section__num">§ 03</span>
+			<span class="section__num">§ 04</span>
 			<h2 class="section__title"><em>every</em> model</h2>
 			<p class="section__sub">Direct connections to whatever you already use. No middle tier.</p>
 		</header>
@@ -415,7 +528,7 @@
 	<!-- ================================================== -->
 	<section class="section" id="faq">
 		<header class="section__head">
-			<span class="section__num">§ 04</span>
+			<span class="section__num">§ 05</span>
 			<h2 class="section__title"><em>questions</em></h2>
 		</header>
 		<div class="faq">
@@ -459,9 +572,16 @@
 			<div class="foot__col">
 				<h5>Product</h5>
 				<a href="#features">Features</a>
-				<a href="#demo">Demo</a>
+				<a href="#how">How it works</a>
+				<a href="#compare">Compare</a>
 				<a href="#models">Models</a>
 				<a href="#download">Download</a>
+			</div>
+			<div class="foot__col">
+				<h5>Project</h5>
+				<a href="https://github.com/Egzothicki/void" rel="noopener">Source on GitHub</a>
+				<a href="https://github.com/Egzothicki/void/releases" rel="noopener">All releases</a>
+				<a href="#faq">FAQ</a>
 			</div>
 		</div>
 		<div class="foot__line">
