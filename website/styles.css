@@ -349,9 +349,10 @@ p { margin: 0; }
 .readout__v { color: var(--c-amber); font-weight: 500; }
 
 @media (max-width: 1080px) {
-	.hero { grid-template-columns: 1fr; }
+	/* Keep long editor examples from widening the whole mobile page. */
+	.hero { grid-template-columns: minmax(0, 1fr); }
 	.rail--left, .rail--right { display: none; }
-	.hero > .hero__content { grid-column: 1; }
+	.hero > .hero__content { grid-column: 1; min-width: 0; max-width: 100%; }
 }
 
 /* Hero content */
@@ -592,8 +593,11 @@ p { margin: 0; }
 	.specimen {
 		position: static;
 		width: 100%;
+		min-width: 0;
+		max-width: 100%;
 		transform: none;
-		margin-top: 40px;
+		animation: none;
+		margin: 40px 0 0;
 		/* When the card drops into flow, let it span the full content
 		   row so it doesn't land in the narrow rail column. */
 		grid-column: 1 / -1;
@@ -790,7 +794,8 @@ p { margin: 0; }
 	font-size: 12.5px;
 	line-height: 1.8;
 	color: var(--c-cream-dim);
-	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
 }
 .demo__body .p { color: var(--c-amber); }
 .demo__body .c { color: var(--c-cream); }
@@ -1344,4 +1349,3 @@ p { margin: 0; }
 	.providers { padding: 16px 18px; gap: 10px 14px; }
 	.providers__list li:not(:last-child)::after { display: none; }
 }
-
