@@ -1349,3 +1349,291 @@ p { margin: 0; }
 	.providers { padding: 16px 18px; gap: 10px 14px; }
 	.providers__list li:not(:last-child)::after { display: none; }
 }
+
+/* =====================================================================
+   HARNESS PAGE — "NEW" tag, spec rows, waitlist form
+   Added for the DeepSeek Harness announcement page (/harness).
+   Everything below reuses the existing tokens; no new palette.
+   ===================================================================== */
+
+/* --------------------------------------------------------------------
+   "NEW" tag — nav item and inline headings
+   -------------------------------------------------------------------- */
+.tag-new {
+	display: inline-block;
+	margin-left: 7px;
+	padding: 1px 5px 2px;
+	font-family: var(--ff-mono);
+	font-size: 9px;
+	font-weight: 600;
+	line-height: 1.5;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--c-signal);
+	background: rgba(111, 179, 160, 0.10);
+	border: 1px solid rgba(111, 179, 160, 0.45);
+	border-radius: 2px;
+	vertical-align: 1px;
+}
+
+/* A slow breathing glow so the tag reads as "just landed" without
+   turning into a blinking banner. Killed by prefers-reduced-motion. */
+@keyframes tag-breathe {
+	0%, 100% { box-shadow: 0 0 0 0 rgba(111, 179, 160, 0.00); }
+	50%      { box-shadow: 0 0 0 3px rgba(111, 179, 160, 0.09); }
+}
+.tag-new--live { animation: tag-breathe 3.2s var(--ease) infinite; }
+
+/* The nav link carrying the tag sits slightly brighter than its
+   siblings so the eye lands on it first. */
+.topbar__nav a.is-new { color: var(--c-cream); }
+.topbar__nav a.is-new::after { background: var(--c-signal); }
+
+/* The whole nav is hidden below 880px. The announcement still needs to
+   be reachable on a phone, so keep that one link and drop the rest. */
+@media (max-width: 880px) {
+	.topbar__nav { display: flex; gap: 0; }
+	.topbar__nav a:not(.is-new) { display: none; }
+}
+@media (max-width: 520px) {
+	/* Three items now share the bar, so tighten the spacing and drop the
+	   build tag to keep the download pill on screen. */
+	.topbar { gap: 12px; padding-left: 16px; padding-right: 16px; }
+	.brand-mark__build { display: none; }
+	.topbar__nav { font-size: 11px; }
+	.tag-new { font-size: 8px; letter-spacing: 0.09em; margin-left: 5px; }
+	.btn--tiny { padding: 8px 10px; }
+}
+
+/* Tightest phones: the wordmark yields to the logo mark so both the
+   Harness link and the download pill stay on screen and tappable. */
+@media (max-width: 430px) {
+	.brand-mark { display: none; }
+}
+
+/* --------------------------------------------------------------------
+   Sub-page hero — same instrument panel, less vertical drama
+   -------------------------------------------------------------------- */
+.hero--sub {
+	min-height: auto;
+	padding-top: clamp(40px, 6vw, 76px);
+	padding-bottom: clamp(56px, 8vw, 104px);
+}
+.hero--sub .hero__title { font-size: clamp(38px, 6.4vw, 76px); }
+
+/* Breadcrumb back to the main site, sits above the eyebrow */
+.crumb {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	font-family: var(--ff-mono);
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--c-cream-muted);
+}
+.crumb:hover { color: var(--c-amber); }
+.crumb svg { flex-shrink: 0; }
+
+/* --------------------------------------------------------------------
+   Spec rows — key/value facts in the lab-instrument voice
+   -------------------------------------------------------------------- */
+.spec {
+	border: 1px solid var(--c-line);
+	border-radius: 3px;
+	overflow: hidden;
+	background: var(--c-bg-soft);
+}
+.spec__row {
+	display: grid;
+	grid-template-columns: 150px 1fr;
+	gap: 20px;
+	padding: 14px 22px;
+	border-top: 1px dashed var(--c-line);
+	font-size: 14px;
+	align-items: baseline;
+}
+.spec__row:first-child { border-top: none; }
+.spec__k {
+	font-family: var(--ff-mono);
+	font-size: 10.5px;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--c-cream-muted);
+}
+.spec__v { color: var(--c-cream); }
+.spec__v em { font-style: normal; color: var(--c-amber); }
+.spec__v a { color: var(--c-amber); border-bottom: 1px solid var(--c-amber-dim); }
+.spec__v a:hover { color: var(--c-cream); }
+@media (max-width: 560px) {
+	.spec__row { grid-template-columns: 1fr; gap: 4px; padding: 14px 18px; }
+}
+
+/* --------------------------------------------------------------------
+   Waitlist
+   -------------------------------------------------------------------- */
+.waitlist-section {
+	position: relative;
+	z-index: 2;
+	border-top: 1px solid var(--c-line);
+	background:
+		radial-gradient(ellipse 80% 100% at 50% 0%, rgba(111, 179, 160, 0.06) 0%, transparent 62%),
+		var(--c-bg-soft);
+	padding: clamp(64px, 9vw, 120px) var(--gutter);
+}
+.waitlist {
+	max-width: 720px;
+	margin: 0 auto;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 20px;
+}
+.waitlist__eyebrow {
+	font-family: var(--ff-mono);
+	font-size: 11px;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--c-signal);
+}
+.waitlist__title {
+	font-family: var(--ff-display);
+	font-weight: 400;
+	font-size: clamp(34px, 5vw, 58px);
+	line-height: 1.02;
+	letter-spacing: -0.015em;
+}
+.waitlist__title em {
+	font-style: italic;
+	color: var(--c-amber);
+	font-variation-settings: "SOFT" 100, "WONK" 1;
+}
+.waitlist__lede {
+	max-width: 520px;
+	color: var(--c-cream-dim);
+	font-size: 16px;
+}
+
+.waitlist__form {
+	width: 100%;
+	max-width: 560px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-top: 8px;
+	text-align: left;
+}
+.waitlist__row {
+	display: flex;
+	gap: 10px;
+	align-items: stretch;
+}
+.waitlist__input {
+	flex: 1 1 auto;
+	min-width: 0;
+	padding: 13px 16px;
+	font-family: var(--ff-body);
+	font-size: 15px;
+	color: var(--c-cream);
+	background: var(--c-bg);
+	border: 1px solid var(--c-line-strong);
+	border-radius: 3px;
+	transition: border-color 200ms var(--ease), box-shadow 200ms var(--ease);
+	appearance: none;
+}
+.waitlist__input::placeholder { color: var(--c-cream-faint); }
+.waitlist__input:focus {
+	outline: none;
+	border-color: var(--c-signal);
+	box-shadow: 0 0 0 3px rgba(111, 179, 160, 0.12);
+}
+.waitlist__input:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.waitlist__select {
+	padding: 13px 16px;
+	font-family: var(--ff-mono);
+	font-size: 12px;
+	letter-spacing: 0.04em;
+	color: var(--c-cream-dim);
+	background: var(--c-bg);
+	border: 1px solid var(--c-line-strong);
+	border-radius: 3px;
+	cursor: pointer;
+}
+.waitlist__select:focus {
+	outline: none;
+	border-color: var(--c-signal);
+}
+
+.waitlist__submit {
+	flex: 0 0 auto;
+	padding: 13px 22px;
+	font-family: var(--ff-mono);
+	font-size: 12px;
+	font-weight: 500;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--c-bg);
+	background: var(--c-cream);
+	border: 1px solid var(--c-cream);
+	border-radius: 3px;
+	cursor: pointer;
+	white-space: nowrap;
+	transition: background-color 200ms var(--ease), color 200ms var(--ease), transform 200ms var(--ease);
+}
+.waitlist__submit:hover:not(:disabled) {
+	background: var(--c-amber);
+	border-color: var(--c-amber);
+	transform: translateY(-1px);
+}
+.waitlist__submit:disabled { opacity: 0.55; cursor: progress; }
+
+.waitlist__note {
+	font-family: var(--ff-mono);
+	font-size: 11px;
+	letter-spacing: 0.04em;
+	color: var(--c-cream-muted);
+	line-height: 1.6;
+}
+.waitlist__note a { color: var(--c-cream-dim); border-bottom: 1px dashed var(--c-line-strong); }
+.waitlist__note a:hover { color: var(--c-amber); }
+
+/* Status line under the form. Hidden until the script fills it. */
+.waitlist__msg {
+	display: none;
+	align-items: flex-start;
+	gap: 9px;
+	padding: 12px 15px;
+	font-size: 14px;
+	border-radius: 3px;
+	border: 1px solid var(--c-line-strong);
+	background: var(--c-bg);
+	color: var(--c-cream-dim);
+}
+.waitlist__msg.is-shown { display: flex; }
+.waitlist__msg.is-ok {
+	color: var(--c-cream);
+	border-color: rgba(111, 179, 160, 0.5);
+	background: rgba(111, 179, 160, 0.08);
+}
+.waitlist__msg.is-error {
+	color: var(--c-cream);
+	border-color: rgba(211, 109, 99, 0.5);
+	background: rgba(211, 109, 99, 0.08);
+}
+.waitlist__msg svg { flex-shrink: 0; margin-top: 2px; }
+
+/* Honeypot — off-screen, never focusable by a human */
+.waitlist__trap {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+@media (max-width: 560px) {
+	.waitlist__row { flex-direction: column; }
+	.waitlist__submit { width: 100%; justify-content: center; }
+}

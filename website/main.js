@@ -27,6 +27,20 @@
 		'any':       RELEASES,
 	};
 
+	// --- Waitlist (harness.html) -------------------------------------
+	// Same-origin endpoint served by nginx on sinweave.com and backed by
+	// sinweave-waitlist.service on the droplet. It stores every signup to
+	// disk and emails a notification. Same origin, so no CORS needed.
+	const WAITLIST_ENDPOINT = '/api/waitlist';
+
+	// Only used if WAITLIST_ENDPOINT is blanked out for local work, so the
+	// form is never a dead end. Deliberately not a personal address —
+	// this file is public.
+	const WAITLIST_EMAIL = 'hello@sinweave.com';
+
+	// Remembers a successful signup so returning visitors aren't asked twice.
+	const WAITLIST_KEY = 'sinweave:harness-waitlist';
+
 	// -----------------------------------------------------------------
 	// OS detection
 	// -----------------------------------------------------------------
@@ -192,6 +206,8 @@
 		...document.querySelectorAll('.download__title, .download__eyebrow, .download__note'),
 		...document.querySelectorAll('.privacy-note'),
 		...document.querySelectorAll('.demo__terminal'),
+		...document.querySelectorAll('.spec__row'),
+		...document.querySelectorAll('.waitlist__title, .waitlist__lede, .waitlist__form'),
 	];
 	toReveal.forEach((el, i) => {
 		el.classList.add('reveal');
@@ -243,6 +259,115 @@
 	// Footer year
 	const yearEl = document.querySelector('[data-year]');
 	if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
+	// -----------------------------------------------------------------
+	// Harness waitlist form
+	// Progressive: validates locally, POSTs JSON when an endpoint is
+	// configured, and falls back to a pre-filled mail draft when one
+	// isn't. Only runs on pages that actually have the form.
+	// -----------------------------------------------------------------
+	const wlForm = document.getElementById('waitlistForm');
+
+	if (wlForm) {
+		const wlInput  = document.getElementById('waitlistEmail');
+		const wlButton = document.getElementById('waitlistSubmit');
+		const wlMsg    = document.getElementById('waitlistMsg');
+		const wlSelect = wlForm.querySelector('[name="use_case"]');
+		const wlTrap   = wlForm.querySelector('[name="company"]');
+
+		const ICON_OK = '<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.6" stroke="currentColor" fill="none" stroke-width="1.3"/><path d="M5.2 8.2l2 2 3.6-4.4" stroke="currentColor" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+		const ICON_ERR = '<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.6" stroke="currentColor" fill="none" stroke-width="1.3"/><path d="M8 4.6v4.2M8 11.2v.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>';
+
+		function say(kind, html) {
+			if (!wlMsg) return;
+			wlMsg.className = 'waitlist__msg is-shown' + (kind ? ' is-' + kind : '');
+			const icon = kind === 'ok' ? ICON_OK : kind === 'error' ? ICON_ERR : '';
+			wlMsg.innerHTML = icon + '<span>' + html + '</span>';
+		}
+
+		function validEmail(v) {
+			// Deliberately loose. The inbox is the real validator.
+			return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+		}
+
+		function lock(on) {
+			if (wlButton) {
+				wlButton.disabled = on;
+				wlButton.textContent = on ? 'Sending…' : 'Join waitlist';
+			}
+			if (wlInput) wlInput.disabled = on;
+		}
+
+		function done(email) {
+			try { localStorage.setItem(WAITLIST_KEY, email); } catch { /* private mode */ }
+			wlForm.querySelector('.waitlist__row').style.display = 'none';
+			if (wlSelect) wlSelect.style.display = 'none';
+			say('ok', "You're on the list. We'll email <strong>" +
+				email.replace(/[<>&]/g, '') + "</strong> when the Harness build is ready.");
+		}
+
+		// Returning visitor who already signed up on this browser.
+		try {
+			const prior = localStorage.getItem(WAITLIST_KEY);
+			if (prior) done(prior);
+		} catch { /* private mode — just show the form */ }
+
+		wlForm.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			// Bots fill hidden fields; humans can't see this one.
+			if (wlTrap && wlTrap.value) return;
+
+			const email = (wlInput && wlInput.value || '').trim();
+			const useCase = (wlSelect && wlSelect.value) || '';
+
+			if (!validEmail(email)) {
+				say('error', 'That address doesn&rsquo;t look right — mind checking it?');
+				if (wlInput) wlInput.focus();
+				return;
+			}
+
+			const payload = {
+				email: email,
+				use_case: useCase,
+				list: 'harness-waitlist',
+				source: location.pathname,
+				submitted_at: new Date().toISOString(),
+			};
+
+			// No endpoint wired up yet: hand off to the user's mail client
+			// so the signup still reaches a human.
+			if (!WAITLIST_ENDPOINT) {
+				const subject = encodeURIComponent('Harness waitlist');
+				const body = encodeURIComponent(
+					'Please add me to the SinWeave Harness waitlist.\n\n' +
+					'Email: ' + email + '\n' +
+					(useCase ? 'Use case: ' + useCase + '\n' : '')
+				);
+				window.location.href = 'mailto:' + WAITLIST_EMAIL + '?subject=' + subject + '&body=' + body;
+				say('ok', 'Opening your mail app to finish the signup. If nothing happens, email <strong>' +
+					WAITLIST_EMAIL + '</strong> and we&rsquo;ll add you.');
+				return;
+			}
+
+			lock(true);
+			say('', 'Adding you&hellip;');
+
+			fetch(WAITLIST_ENDPOINT, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+				body: JSON.stringify(payload),
+			})
+				.then((res) => {
+					if (!res.ok) throw new Error('HTTP ' + res.status);
+					done(email);
+				})
+				.catch(() => {
+					lock(false);
+					say('error', 'That didn&rsquo;t go through &mdash; try again in a moment.');
+				});
+		});
+	}
 
 	// -----------------------------------------------------------------
 	// Keyboard affordance: "g g" jumps to top, "g d" to download. Small,

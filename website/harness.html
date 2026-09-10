@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en" data-theme="warm-dark">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="color-scheme" content="dark" />
+	<meta name="theme-color" content="#0b0a08" />
+
+	<title>DeepSeek Harness in SinWeave — the open agent runtime, in your editor</title>
+	<meta name="description" content="DeepSeek Harness is an MIT-licensed, plugin-based agent runtime. We're wiring it into SinWeave so long agentic runs happen on your machine, with your keys. Join the waitlist." />
+	<link rel="canonical" href="https://sinweave.com/harness" />
+
+	<!-- Open Graph / Twitter (absolute URLs — social scrapers don't resolve relative paths) -->
+	<meta property="og:title" content="DeepSeek Harness in SinWeave — the open agent runtime, in your editor" />
+	<meta property="og:description" content="An MIT-licensed agent runtime where everything is a plugin. Coming to SinWeave — your keys, your machine, no middleman." />
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="SinWeave" />
+	<meta property="og:url" content="https://sinweave.com/harness" />
+	<meta property="og:image" content="https://sinweave.com/assets/og-image.png" />
+	<meta property="og:image:alt" content="DeepSeek Harness in SinWeave" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:title" content="DeepSeek Harness in SinWeave" />
+	<meta name="twitter:description" content="An MIT-licensed agent runtime where everything is a plugin. Coming to SinWeave — your keys, your machine, no middleman." />
+	<meta name="twitter:image" content="https://sinweave.com/assets/og-image.png" />
+
+	<!-- Structured data: this page is an announcement about a feature in progress -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebPage",
+		"name": "DeepSeek Harness in SinWeave",
+		"url": "https://sinweave.com/harness",
+		"description": "DeepSeek Harness is an MIT-licensed, plugin-based agent runtime. SinWeave is integrating it so agentic runs stay on your machine, with your own keys.",
+		"isPartOf": {
+			"@type": "WebSite",
+			"name": "SinWeave",
+			"url": "https://sinweave.com/"
+		},
+		"about": {
+			"@type": "SoftwareApplication",
+			"name": "DeepSeek Harness",
+			"applicationCategory": "DeveloperApplication",
+			"license": "https://opensource.org/licenses/MIT",
+			"url": "https://github.com/deepseek-ai/deepseek-harness"
+		}
+	}
+	</script>
+
+	<!-- Structured data: FAQ rich results -->
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "FAQPage",
+		"mainEntity": [
+			{
+				"@type": "Question",
+				"name": "What is DeepSeek Harness?",
+				"acceptedAnswer": { "@type": "Answer", "text": "DeepSeek Harness (dsh) is an open-source agent runtime released by DeepSeek in August 2026 under the MIT licence. It is written in TypeScript and built so that every layer — the model provider, the tool registry, the sandbox, session storage, the agent loop, even the interface — is a swappable plugin." }
+			},
+			{
+				"@type": "Question",
+				"name": "Does using Harness mean I have to use DeepSeek models?",
+				"acceptedAnswer": { "@type": "Answer", "text": "No. DeepSeek V3.1 is the default, but the inference layer is a plugin like everything else. Anthropic, OpenAI, Gemini, OpenRouter, or a local Ollama endpoint all work. The models you have already configured in SinWeave carry over." }
+			},
+			{
+				"@type": "Question",
+				"name": "Will my code be sent to DeepSeek?",
+				"acceptedAnswer": { "@type": "Answer", "text": "No. The harness runs on your machine, the same as the rest of SinWeave. Requests go from your editor straight to whichever provider you configured. There is no SinWeave server and no DeepSeek server in the middle unless you choose a DeepSeek model, in which case you are talking to their API directly with your own key." }
+			},
+			{
+				"@type": "Question",
+				"name": "When will Harness be available in SinWeave?",
+				"acceptedAnswer": { "@type": "Answer", "text": "It is in active development and there is no shipping date yet. Harness itself is a developer preview and its authors have said breaking changes are likely, so we would rather land it late than land it broken. Join the waitlist and you will hear the day the first build is ready." }
+			},
+			{
+				"@type": "Question",
+				"name": "Is this a paid feature?",
+				"acceptedAnswer": { "@type": "Answer", "text": "No. SinWeave is free and Harness is MIT-licensed. You pay your model provider directly, or nothing at all if you run local models." }
+			}
+		]
+	}
+	</script>
+
+	<!-- Icons -->
+	<link rel="icon" type="image/png" href="/assets/favicon.png" />
+	<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+
+	<!-- Fonts: Fraunces (display serif), IBM Plex Sans (body), IBM Plex Mono (technical) -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link
+		rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+	/>
+
+	<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+	<!-- Grain + grid overlays (decorative, pointer-events: none) -->
+	<div class="overlay overlay--grid" aria-hidden="true"></div>
+	<div class="overlay overlay--grain" aria-hidden="true"></div>
+	<div class="overlay overlay--vignette" aria-hidden="true"></div>
+
+	<!-- ================================================== -->
+	<!--  TOP BAR                                            -->
+	<!-- ================================================== -->
+	<header class="topbar" role="banner">
+		<a class="topbar__brand" href="/" aria-label="SinWeave home">
+			<img src="/assets/logo-white.png" alt="" width="28" height="28" />
+			<span class="brand-mark">
+				<span class="brand-mark__name">SinWeave</span>
+				<span class="brand-mark__build" data-build>v1.0.0-α</span>
+			</span>
+		</a>
+
+		<nav class="topbar__nav" aria-label="Primary">
+			<a href="/#features">Features</a>
+			<a href="/#how">How it works</a>
+			<a href="/#compare">Compare</a>
+			<a href="/#models">Models</a>
+			<a class="is-new" href="/harness" aria-current="page">Harness<span class="tag-new tag-new--live">New</span></a>
+			<a href="/#faq">FAQ</a>
+		</nav>
+
+		<a class="btn btn--tiny" href="/#download" data-nav-download>
+			<span data-os-label>Download</span>
+			<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1v7m0 0L3 5m3 3l3-3M2 10h8" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+		</a>
+	</header>
+
+	<!-- ================================================== -->
+	<!--  HERO                                               -->
+	<!-- ================================================== -->
+	<section class="hero hero--sub" id="top">
+		<!-- Lab-notebook left rail: section marks -->
+		<aside class="rail rail--left" aria-hidden="true">
+			<div class="rail__tick"><span class="rail__num">§ 00</span><span class="rail__label">harness</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 01</span><span class="rail__label">what it is</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 02</span><span class="rail__label">what changes</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 03</span><span class="rail__label">how it runs</span></div>
+			<div class="rail__tick rail__tick--muted"><span class="rail__num">§ 04</span><span class="rail__label">questions</span></div>
+		</aside>
+
+		<!-- Right-rail meta readout -->
+		<aside class="rail rail--right" aria-hidden="true">
+			<div class="readout">
+				<div class="readout__row"><span class="readout__k">UPSTR.</span><span class="readout__v">dsh</span></div>
+				<div class="readout__row"><span class="readout__k">LIC.</span><span class="readout__v">MIT</span></div>
+				<div class="readout__row"><span class="readout__k">STATE</span><span class="readout__v">preview</span></div>
+				<div class="readout__row"><span class="readout__k">HOST</span><span class="readout__v" data-host>local</span></div>
+			</div>
+		</aside>
+
+		<!-- Animated sine wave backdrop -->
+		<svg class="hero__wave" viewBox="0 0 1200 400" preserveAspectRatio="none" aria-hidden="true">
+			<defs>
+				<linearGradient id="waveFade" x1="0" y1="0" x2="1" y2="0">
+					<stop offset="0" stop-color="var(--c-cream)" stop-opacity="0" />
+					<stop offset="0.15" stop-color="var(--c-cream)" stop-opacity="0.55" />
+					<stop offset="0.85" stop-color="var(--c-cream)" stop-opacity="0.55" />
+					<stop offset="1" stop-color="var(--c-cream)" stop-opacity="0" />
+				</linearGradient>
+			</defs>
+			<path id="heroWave" d="" stroke="url(#waveFade)" stroke-width="1.3" fill="none" />
+			<path id="heroWaveGhost" d="" stroke="var(--c-cream)" stroke-width="0.6" stroke-opacity="0.25" fill="none" />
+		</svg>
+
+		<div class="hero__content">
+			<a class="crumb" href="/">
+				<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M7.5 2L3.5 6l4 4" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+				Back to SinWeave
+			</a>
+
+			<div class="hero__eyebrow">
+				<span class="pill">NEW · OPEN&nbsp;SOURCE</span>
+				<span class="eyebrow-rule"></span>
+				<span class="eyebrow-note">deepseek harness — the runtime, not the model</span>
+			</div>
+
+			<h1 class="hero__title">
+				<span class="hero__title-top">The open agent runtime,</span>
+				<span class="hero__title-accent">running <em>inside</em> your editor.</span>
+			</h1>
+
+			<p class="hero__lede">
+				In August 2026 DeepSeek open-sourced <strong>Harness</strong> — the agent
+				runtime their own models were built to run in. Not a model, not an API:
+				the loop that reads your files, calls tools, runs commands, and keeps
+				going. It is MIT-licensed, and it is coming to SinWeave.
+			</p>
+
+			<div class="hero__actions">
+				<a class="btn btn--primary" href="#waitlist">
+					<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M1.5 3.5h11v7h-11zM1.5 3.5L7 8l5.5-4.5" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<span>
+						<span class="btn__primary">Join the waitlist</span>
+						<span class="btn__secondary">one email when it ships · nothing else</span>
+					</span>
+				</a>
+				<a class="btn btn--ghost" href="#what">
+					<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7h8M8 3.5L11.5 7 8 10.5" stroke="currentColor" stroke-width="1.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					What it actually is
+				</a>
+			</div>
+
+			<ul class="hero__trust" role="list">
+				<li>
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l6 2.6v4.3C14 12 11.4 14.6 8 15.6 4.6 14.6 2 12 2 7.9V3.6L8 1z" stroke="currentColor" fill="none" stroke-width="1.3" stroke-linejoin="round"/><path d="M5.6 8l1.7 1.7L11 6" stroke="currentColor" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<span>Runs local — same as the rest of SinWeave</span>
+				</li>
+				<li>
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v5m0 0L5.5 4M8 6.5 10.5 4M2.5 11.5h11" stroke="currentColor" fill="none" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					<span>MIT licence, no vendor lock</span>
+				</li>
+				<li>
+					<svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 8h11M8 2.5v11M4 4l8 8M12 4l-8 8" stroke="currentColor" fill="none" stroke-width="1.1" stroke-linecap="round"/></svg>
+					<span>Any model — DeepSeek is only the default</span>
+				</li>
+			</ul>
+
+			<div class="hero__ticker" aria-hidden="true">
+				<span>MIT licence</span><em>·</em>
+				<span>200k+ stars</span><em>·</em>
+				<span class="dim">integration in progress</span>
+			</div>
+		</div>
+
+		<!-- "Specimen" card: a Harness session, mid-run -->
+		<figure class="specimen" aria-label="Harness session specimen">
+			<figcaption class="specimen__cap">
+				<span class="specimen__num">Fig. 07</span>
+				<span class="specimen__title">harness · agent run · 14 steps</span>
+				<span class="specimen__lights" aria-hidden="true"><i></i><i></i><i></i></span>
+			</figcaption>
+			<div class="specimen__body">
+				<div class="msg msg--user">
+					<span class="msg__who">you</span>
+					<span class="msg__text">the checkout tests are flaky. find out why and fix it.</span>
+				</div>
+				<div class="msg msg--ai">
+					<span class="msg__who">harness</span>
+					<span class="msg__text">
+						Running <code>vitest checkout</code> ten times to reproduce.
+						3 of 10 failed on <code>cart.total</code> — a shared fixture is
+						mutated between cases. Patching the fixture, then re-running.
+					</span>
+				</div>
+				<div class="msg msg--diff">
+					<pre><span class="ln">  18</span><span class="del">- const cart = baseCart</span>
+<span class="ln">  18</span><span class="add">+ const cart = structuredClone(baseCart)</span>
+<span class="ln">  31</span><span class="ctx">  expect(cart.total).toBe(4200)</span></pre>
+				</div>
+				<div class="msg msg--meta">
+					<span class="blip"></span>
+					<span>14 steps · 2 files · 10/10 green · sandbox: workspace-write</span>
+				</div>
+			</div>
+		</figure>
+	</section>
+
+	<!-- providers strip: reinforce that the model layer is still yours -->
+	<aside class="providers" aria-label="Model providers supported by Harness">
+		<span class="providers__label">Still your keys —</span>
+		<ul class="providers__list">
+			<li>DeepSeek</li>
+			<li>Anthropic</li>
+			<li>OpenAI</li>
+			<li>Google</li>
+			<li>Mistral</li>
+			<li>xAI</li>
+			<li>OpenRouter</li>
+			<li>Ollama&nbsp;· local</li>
+		</ul>
+	</aside>
+
+	<!-- ================================================== -->
+	<!--  § 01 · WHAT IT IS                                  -->
+	<!-- ================================================== -->
+	<section class="section" id="what">
+		<header class="section__head">
+			<span class="section__num">§ 01</span>
+			<h2 class="section__title"><em>everything</em> is a plugin</h2>
+			<p class="section__sub">Most agent tools hard-wire the loop and let you swap the model. Harness inverts that: every layer is a plugin, including the loop itself. That is the whole reason it is worth adopting rather than reinventing.</p>
+		</header>
+
+		<div class="feature-grid">
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<rect x="6" y="6" width="28" height="28" rx="6" stroke="currentColor" fill="none" stroke-width="1.6"/>
+						<path d="M14 20h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+						<circle cx="14" cy="20" r="1.2" fill="currentColor"/>
+					</svg>
+				</div>
+				<h3>The model layer</h3>
+				<p>DeepSeek V3.1 is the default, but inference is a plugin like everything else. Point it at Anthropic, OpenAI, Gemini, OpenRouter, or the Ollama instance already running on your laptop.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M20 6l12 7v14l-12 7L8 27V13z" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linejoin="round"/>
+						<path d="M20 14v8m-4-4h8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>A real sandbox</h3>
+				<p>Commands run under an enforced file policy — <code>read-only</code>, <code>workspace-write</code>, or full access if you insist. Landlock and bubblewrap on Linux, Seatbelt on macOS, restricted tokens on Windows.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M4 20c4-9 8-9 12 0s8 9 12 0 8-9 8-9" stroke="currentColor" fill="none" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>Long runs that survive</h3>
+				<p>Context compaction, spill-to-disk, session storage, and checkpoints are first-class packages. A run that takes forty minutes and two hundred tool calls does not fall over halfway.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M20 6v28M6 20h28" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+						<circle cx="20" cy="20" r="6" stroke="currentColor" fill="none" stroke-width="1.6"/>
+					</svg>
+				</div>
+				<h3>Subagents and workflows</h3>
+				<p>Fan work out to child agents, each with its own budget and toolset. Plans, goals, and todo state are tracked by the runtime rather than improvised inside a prompt.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M8 12h24M8 20h18M8 28h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+						<circle cx="32" cy="28" r="4" stroke="currentColor" fill="none" stroke-width="1.6"/>
+					</svg>
+				</div>
+				<h3>MCP, LSP, hooks, skills</h3>
+				<p>Model Context Protocol servers attach directly. Language-server diagnostics feed the agent real type errors. Hooks let you intercept any tool call before it runs.</p>
+			</article>
+
+			<article class="feature">
+				<div class="feature__mark">
+					<svg viewBox="0 0 40 40" aria-hidden="true">
+						<path d="M12 8v24M28 8v24M12 16h16M12 24h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+					</svg>
+				</div>
+				<h3>An auditable trail</h3>
+				<p>Every step is recorded: which plugin fired, which tool it called, what came back. When an agent does something surprising you can read exactly why instead of guessing.</p>
+			</article>
+
+		</div>
+
+		<div class="spec" style="margin-top: 40px;">
+			<div class="spec__row">
+				<span class="spec__k">Upstream</span>
+				<span class="spec__v"><a href="https://github.com/deepseek-ai/deepseek-harness" rel="noopener">deepseek-ai/deepseek-harness</a> — the reference implementation we build on</span>
+			</div>
+			<div class="spec__row">
+				<span class="spec__k">Licence</span>
+				<span class="spec__v"><em>MIT</em> — permissive, forkable, no strings on what we ship</span>
+			</div>
+			<div class="spec__row">
+				<span class="spec__k">Released</span>
+				<span class="spec__v">August 2026 — crossed <em>200,000</em> GitHub stars inside its first month</span>
+			</div>
+			<div class="spec__row">
+				<span class="spec__k">Written in</span>
+				<span class="spec__v">TypeScript, on the Cordis plugin framework — the same language SinWeave is</span>
+			</div>
+			<div class="spec__row">
+				<span class="spec__k">Status</span>
+				<span class="spec__v">Developer preview upstream. Breaking changes expected, which is why we are taking our time</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 02 · WHAT CHANGES                                -->
+	<!-- ================================================== -->
+	<section class="section" id="changes">
+		<header class="section__head">
+			<span class="section__num">§ 02</span>
+			<h2 class="section__title"><em>what</em> changes for you</h2>
+			<p class="section__sub">SinWeave already does chat, inline edits, and multi-file diffs well. Harness is about the jobs that are too long or too branching for a chat window.</p>
+		</header>
+
+		<div class="compare">
+			<div class="compare__row compare__row--head" role="row">
+				<span class="compare__label"></span>
+				<span class="compare__mine">With Harness</span>
+				<span class="compare__theirs">SinWeave today</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Task length</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Hundreds of steps, compacted and checkpointed as it goes</span>
+				<span class="compare__theirs"><i class="cw" aria-hidden="true">~</i> Great for a file or a feature, strained by an afternoon of work</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Running commands</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Tests, builds, and scripts under an enforced write policy</span>
+				<span class="compare__theirs"><i class="cw" aria-hidden="true">~</i> You run them, then paste the output back</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Parallel work</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Subagents with their own budgets and tools</span>
+				<span class="compare__theirs"><i class="cx" aria-hidden="true">✕</i> One conversation at a time</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Tool ecosystem</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> MCP servers, LSP diagnostics, hooks, community plugins</span>
+				<span class="compare__theirs"><i class="cw" aria-hidden="true">~</i> The built-in toolset</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Your keys</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Unchanged — straight from your machine to your provider</span>
+				<span class="compare__theirs"><i class="ck" aria-hidden="true">✓</i> Unchanged — straight from your machine to your provider</span>
+			</div>
+			<div class="compare__row">
+				<span class="compare__label">Price</span>
+				<span class="compare__mine"><i class="ck" aria-hidden="true">✓</i> Free — you pay the model provider, or nothing if local</span>
+				<span class="compare__theirs"><i class="ck" aria-hidden="true">✓</i> Free — you pay the model provider, or nothing if local</span>
+			</div>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 03 · HOW IT RUNS                                 -->
+	<!-- ================================================== -->
+	<section class="section section--split" id="how-it-runs">
+		<header class="section__head">
+			<span class="section__num">§ 03</span>
+			<h2 class="section__title"><em>how</em> it will run</h2>
+			<p class="section__sub">The plan is deliberately boring: the runtime sits beside the editor, speaks a documented protocol, and never becomes something you cannot turn off.</p>
+		</header>
+
+		<div class="demo">
+
+			<ol class="demo__steps">
+				<li>
+					<span class="demo__step">01</span>
+					<div>
+						<h4>The runtime ships inside SinWeave.</h4>
+						<p>No separate install, no daemon to babysit, no account. It starts with the editor and stops with it, and you can disable it entirely in Settings.</p>
+					</div>
+				</li>
+				<li>
+					<span class="demo__step">02</span>
+					<div>
+						<h4>Your existing keys carry over.</h4>
+						<p>Whatever you have already configured becomes the harness&#39;s model layer. Nothing new to paste, and no provider you did not choose yourself.</p>
+					</div>
+				</li>
+				<li>
+					<span class="demo__step">03</span>
+					<div>
+						<h4>You watch, and you keep the veto.</h4>
+						<p>Every step appears as it happens and every write still lands as a reviewable diff. The sandbox policy is yours to set — read-only, workspace-only, or open.</p>
+					</div>
+				</li>
+			</ol>
+
+			<div class="demo__terminal" role="presentation">
+				<div class="demo__bar">
+					<i></i><i></i><i></i>
+					<span>~/checkout — harness</span>
+				</div>
+				<pre class="demo__body"><span class="p">▸ </span><span class="u">why are the checkout tests flaky?</span>
+<span class="m">→ sandbox: workspace-write · model: your key</span>
+<span class="m">→ run  vitest checkout --repeat 10</span>
+<span class="m">→ read src/test/fixtures.ts · 3 callers</span>
+<span class="m">→ edit fixtures.ts · clone the base cart</span>
+<span class="m">→ run  vitest checkout --repeat 10</span>
+
+<span class="ok">✓ 10/10 green · 14 steps · 2 files · review the diff</span>
+<span class="p">▸ </span><span class="cursor"> </span></pre>
+			</div>
+
+		</div>
+
+		<div class="privacy-note">
+			<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V5l7-3z" stroke="currentColor" fill="none" stroke-width="1.4" stroke-linejoin="round"/><path d="M7 10l2 2 4-5" stroke="currentColor" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+			<div>
+				<strong>Adopting Harness does not change the deal.</strong>
+				The runtime executes on your machine against your files. Prompts and
+				code go to the provider you picked and nowhere else. We do not proxy
+				it, we do not log it, and there is still no SinWeave account.
+			</div>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  WAITLIST                                           -->
+	<!-- ================================================== -->
+	<section class="waitlist-section" id="waitlist">
+		<div class="waitlist">
+			<p class="waitlist__eyebrow">Early access</p>
+			<h2 class="waitlist__title">be there for the <em>first</em> build</h2>
+			<p class="waitlist__lede">
+				We will send one email when the Harness build is ready to try, and a
+				second if we need testers before that. No newsletter, no drip
+				sequence, no sharing your address with anyone.
+			</p>
+
+			<form class="waitlist__form" id="waitlistForm" novalidate>
+				<div class="waitlist__row">
+					<label class="waitlist__trap" aria-hidden="true">
+						Leave this empty
+						<input type="text" name="company" tabindex="-1" autocomplete="off" />
+					</label>
+
+					<input
+						class="waitlist__input"
+						type="email"
+						name="email"
+						id="waitlistEmail"
+						placeholder="you@example.com"
+						autocomplete="email"
+						required
+						aria-label="Email address"
+					/>
+					<button class="waitlist__submit" type="submit" id="waitlistSubmit">Join waitlist</button>
+				</div>
+
+				<select class="waitlist__select" name="use_case" aria-label="What you would mainly use it for">
+					<option value="">What would you mainly use it for? (optional)</option>
+					<option value="everyday">Everyday coding, faster</option>
+					<option value="long-runs">Long agentic runs — refactors, migrations</option>
+					<option value="local">Local and offline models</option>
+					<option value="plugins">Writing my own plugins and tools</option>
+					<option value="curious">Just curious</option>
+				</select>
+
+				<div class="waitlist__msg" id="waitlistMsg" role="status" aria-live="polite"></div>
+
+				<p class="waitlist__note">
+					One email, then silence until it ships. Unsubscribe is a reply.
+					Harness itself is open source — you can read every line at
+					<a href="https://github.com/deepseek-ai/deepseek-harness" rel="noopener">deepseek-ai/deepseek-harness</a>.
+				</p>
+			</form>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  § 04 · FAQ                                         -->
+	<!-- ================================================== -->
+	<section class="section" id="harness-faq">
+		<header class="section__head">
+			<span class="section__num">§ 04</span>
+			<h2 class="section__title"><em>questions</em></h2>
+		</header>
+		<div class="faq">
+			<details open>
+				<summary>Does this mean SinWeave is becoming a DeepSeek product?</summary>
+				<p>No. Harness is MIT-licensed software that happens to have been written by DeepSeek, in the same way SinWeave is a fork of software written by Microsoft. The model layer is a plugin — DeepSeek V3.1 is the default because that is what upstream ships, and you can replace it in one setting.</p>
+			</details>
+			<details>
+				<summary>Will my code be sent to DeepSeek?</summary>
+				<p>Only if you choose a DeepSeek model, and then it goes directly from your machine to their API with your own key. Pick Anthropic, OpenAI, or a local Ollama model and DeepSeek never sees anything. The runtime itself is code running on your laptop, not a service.</p>
+			</details>
+			<details>
+				<summary>Why adopt someone else&#39;s runtime instead of building our own?</summary>
+				<p>Because the hard parts — sandboxing across three operating systems, context compaction, session recovery, subagent budgets — are solved there and battle-tested by a very large number of users. Writing a worse version of that ourselves would cost months and buy nothing.</p>
+			</details>
+			<details>
+				<summary>When does it ship?</summary>
+				<p>No date yet. Harness is still a developer preview and its own authors warn about breaking changes, so we are tracking it rather than racing it. The waitlist is the honest answer: you will hear the day there is a build worth using.</p>
+			</details>
+			<details>
+				<summary>Will it cost anything?</summary>
+				<p>No. SinWeave stays free and Harness is MIT-licensed. You pay your model provider directly, or nothing at all if you run local models. Long agentic runs do burn more tokens than a chat message, so keep an eye on your provider dashboard.</p>
+			</details>
+			<details>
+				<summary>Can I try Harness right now, outside SinWeave?</summary>
+				<p>Yes — it is open source and runs standalone today. That is a separate thing from the SinWeave integration, which is what this page and the waitlist are about.</p>
+			</details>
+		</div>
+	</section>
+
+	<!-- ================================================== -->
+	<!--  FOOTER                                             -->
+	<!-- ================================================== -->
+	<footer class="foot" role="contentinfo">
+		<div class="foot__grid">
+			<div class="foot__brand">
+				<img src="/assets/logo-white.png" alt="" width="36" height="36" />
+				<p class="foot__name">SinWeave</p>
+				<p class="foot__blurb">An AI-native code editor. Your code, your keys, your rules.</p>
+			</div>
+			<div class="foot__col">
+				<h5>Product</h5>
+				<a href="/#features">Features</a>
+				<a href="/#how">How it works</a>
+				<a href="/#compare">Compare</a>
+				<a href="/#models">Models</a>
+				<a href="/harness">Harness</a>
+				<a href="/#download">Download</a>
+			</div>
+			<div class="foot__col">
+				<h5>Project</h5>
+				<a href="https://github.com/Egzothicki/void" rel="noopener">Source on GitHub</a>
+				<a href="https://github.com/Egzothicki/void/releases" rel="noopener">All releases</a>
+				<a href="https://github.com/deepseek-ai/deepseek-harness" rel="noopener">DeepSeek Harness</a>
+				<a href="/#faq">FAQ</a>
+			</div>
+		</div>
+		<div class="foot__line">
+			<span>© <span data-year></span> SinWeave</span>
+			<span>Made for people who still want to write their own code.</span>
+		</div>
+	</footer>
+
+	<script src="/main.js"></script>
+</body>
+</html>

@@ -38,10 +38,21 @@ services:
     buildFilter:
       paths:
         - website/**
-    # SPA-style rewrite disabled — this is a multi-file static site (well, one
-    # for now, but keeping the door open). We do add 404 → index so unknown
-    # paths don't feel broken.
+    # Multi-file static site. Real files are served directly; the catch-all
+    # at the bottom is only a 404 → index fallback so unknown paths don't
+    # feel broken. Clean URLs for extra pages must be listed BEFORE it,
+    # because routes are matched in order.
     routes:
+      # Clean URL for the Harness page, with and without a trailing slash.
+      # Deliberately rewrites rather than redirects: a redirect from
+      # /harness.html could re-enter these rules and loop. The canonical
+      # tag in harness.html already points search engines at /harness.
+      - type: rewrite
+        source: /harness
+        destination: /harness.html
+      - type: rewrite
+        source: /harness/
+        destination: /harness.html
       - type: rewrite
         source: /*
         destination: /index.html
