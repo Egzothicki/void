@@ -1389,6 +1389,19 @@ p { margin: 0; }
 .topbar__nav a.is-new { color: var(--c-cream); }
 .topbar__nav a.is-new::after { background: var(--c-signal); }
 
+/* Harness is a page, not an on-page anchor like the other nav items, so
+   mark it as the current page. Without this the link looks clickable on
+   the page it already points at, and clicking it just reloads. */
+.topbar__nav a[aria-current="page"] {
+	color: var(--c-signal);
+	cursor: default;
+}
+.topbar__nav a[aria-current="page"]::after {
+	transform: scaleX(1);
+	background: var(--c-signal);
+	opacity: 0.55;
+}
+
 /* The whole nav is hidden below 880px. The announcement still needs to
    be reachable on a phone, so keep that one link and drop the rest. */
 @media (max-width: 880px) {
